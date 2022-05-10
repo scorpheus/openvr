@@ -2,4 +2,10 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-*.user
+.vs
+*.vcxproj.user
+/out
+/samples/*/Debug
+/samples/bin
+/bin/win32
+/bin/win64
