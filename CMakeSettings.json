@@ -7,7 +7,7 @@
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DBUILD_SHARED_LIBS=ON -DCMAKE_DEBUG_POSTFIX=d -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\"",
+      "cmakeCommandArgs": "-DBUILD_SHARED_LIBS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\"",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": ""
     },
@@ -18,7 +18,7 @@
       "inheritEnvironments": [ "msvc_x86" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DBUILD_SHARED_LIBS=ON -DCMAKE_DEBUG_POSTFIX=d -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\"",
+      "cmakeCommandArgs": "-DBUILD_SHARED_LIBS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\"",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": ""
     },
@@ -51,7 +51,7 @@
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DCMAKE_DEBUG_POSTFIX=d -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>\"",
+      "cmakeCommandArgs": -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>\"",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": ""
     },
@@ -62,7 +62,7 @@
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DCMAKE_DEBUG_POSTFIX=d -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\"",
+      "cmakeCommandArgs": -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\"",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": ""
     },
@@ -73,7 +73,7 @@
       "inheritEnvironments": [ "msvc_x86" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DCMAKE_DEBUG_POSTFIX=d -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>\"",
+      "cmakeCommandArgs": -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>\"",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": ""
     },
@@ -116,7 +116,7 @@
       "configurationType": "Debug",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DBUILD_SHARED_LIBS=ON -DCMAKE_DEBUG_POSTFIX=cd -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\"",
+      "cmakeCommandArgs": "-DBUILD_SHARED_LIBS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\"",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "clang_cl_x64" ],
@@ -162,7 +162,7 @@
       "configurationType": "Debug",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-DCMAKE_DEBUG_POSTFIX=cd -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>\"",
+      "cmakeCommandArgs": "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=\"MultiThreaded$<$<CONFIG:Debug>:Debug>\"",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "clang_cl_x64" ],
