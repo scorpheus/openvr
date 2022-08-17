@@ -31,6 +31,8 @@ option(USE_CUSTOM_LIBCXX "Uses a custom libc++" OFF)
 
 add_definitions( -DVR_API_PUBLIC )
 
+set (CMAKE_DEBUG_POSTFIX d)
+
 # Check if 32 or 64 bit system.
 set(SIZEOF_VOIDP ${CMAKE_SIZEOF_VOID_P})
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
