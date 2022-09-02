@@ -2063,8 +2063,59 @@ struct ImuSample_t
 namespace vr
 {
 
+struct VR_IVRSystem_FnTable
+{
+	void (__stdcall *GetRecommendedRenderTargetSize)( uint32_t *pnWidth, uint32_t *pnHeight );
+	HmdMatrix44_t (__stdcall *GetProjectionMatrix)( EVREye eEye, float fNearZ, float fFarZ );
+	void (__stdcall *GetProjectionRaw)( EVREye eEye, float *pfLeft, float *pfRight, float *pfTop, float *pfBottom );
+	bool (__stdcall *ComputeDistortion)( EVREye eEye, float fU, float fV, DistortionCoordinates_t *pDistortionCoordinates );
+	HmdMatrix34_t (__stdcall *GetEyeToHeadTransform)( EVREye eEye );
+	bool (__stdcall *GetTimeSinceLastVsync)( float *pfSecondsSinceLastVsync, uint64_t *pulFrameCounter );
+	int32_t (__stdcall *GetD3D9AdapterIndex)();
+	void (__stdcall *GetDXGIOutputInfo)( int32_t *pnAdapterIndex );
+	void (__stdcall *GetOutputDevice)( uint64_t *pnDevice, ETextureType textureType, VkInstance_T *pInstance);
+	bool (__stdcall *IsDisplayOnDesktop)();
+	bool (__stdcall *SetDisplayVisibility)( bool bIsVisibleOnDesktop );
+	void (__stdcall *GetDeviceToAbsoluteTrackingPose)( ETrackingUniverseOrigin eOrigin, float fPredictedSecondsToPhotonsFromNow,  TrackedDevicePose_t *pTrackedDevicePoseArray, uint32_t unTrackedDevicePoseArrayCount );
+	HmdMatrix34_t (__stdcall *GetSeatedZeroPoseToStandingAbsoluteTrackingPose)();
+	HmdMatrix34_t (__stdcall *GetRawZeroPoseToStandingAbsoluteTrackingPose)();
+	uint32_t (__stdcall *GetSortedTrackedDeviceIndicesOfClass)( ETrackedDeviceClass eTrackedDeviceClass,  vr::TrackedDeviceIndex_t *punTrackedDeviceIndexArray, uint32_t unTrackedDeviceIndexArrayCount, vr::TrackedDeviceIndex_t unRelativeToTrackedDeviceIndex);
+	EDeviceActivityLevel (__stdcall *GetTrackedDeviceActivityLevel)( vr::TrackedDeviceIndex_t unDeviceId );
+	void (__stdcall *ApplyTransform)( TrackedDevicePose_t *pOutputPose, const TrackedDevicePose_t *pTrackedDevicePose, const HmdMatrix34_t *pTransform );
+	vr::TrackedDeviceIndex_t (__stdcall *GetTrackedDeviceIndexForControllerRole)( vr::ETrackedControllerRole unDeviceType );
+	vr::ETrackedControllerRole (__stdcall *GetControllerRoleForTrackedDeviceIndex)( vr::TrackedDeviceIndex_t unDeviceIndex );
+	ETrackedDeviceClass (__stdcall *GetTrackedDeviceClass)( vr::TrackedDeviceIndex_t unDeviceIndex );
+	bool (__stdcall *IsTrackedDeviceConnected)( vr::TrackedDeviceIndex_t unDeviceIndex );
+	bool (__stdcall *GetBoolTrackedDeviceProperty)( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError);
+	float (__stdcall *GetFloatTrackedDeviceProperty)( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError);
+	int32_t (__stdcall *GetInt32TrackedDeviceProperty)( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError);
+	uint64_t (__stdcall *GetUint64TrackedDeviceProperty)( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError);
+	HmdMatrix34_t (__stdcall *GetMatrix34TrackedDeviceProperty)( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError);
+	uint32_t (__stdcall *GetArrayTrackedDeviceProperty)( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, PropertyTypeTag_t propType, void *pBuffer, uint32_t unBufferSize, ETrackedPropertyError *pError);
+	uint32_t (__stdcall *GetStringTrackedDeviceProperty)( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop,  char *pchValue, uint32_t unBufferSize, ETrackedPropertyError *pError);
+	const char *(__stdcall *GetPropErrorNameFromEnum)( ETrackedPropertyError error );
+	bool (__stdcall *PollNextEvent)( VREvent_t *pEvent, uint32_t uncbVREvent );
+	bool (__stdcall *PollNextEventWithPose)( ETrackingUniverseOrigin eOrigin, VREvent_t *pEvent, uint32_t uncbVREvent, vr::TrackedDevicePose_t *pTrackedDevicePose );
+	const char *(__stdcall *GetEventTypeNameFromEnum)( EVREventType eType );
+	HiddenAreaMesh_t (__stdcall *GetHiddenAreaMesh)( EVREye eEye, EHiddenAreaMeshType type);
+	bool (__stdcall *GetControllerState)( vr::TrackedDeviceIndex_t unControllerDeviceIndex, vr::VRControllerState_t *pControllerState, uint32_t unControllerStateSize );
+	bool (__stdcall *GetControllerStateWithPose)( ETrackingUniverseOrigin eOrigin, vr::TrackedDeviceIndex_t unControllerDeviceIndex, vr::VRControllerState_t *pControllerState, uint32_t unControllerStateSize, TrackedDevicePose_t *pTrackedDevicePose );
+	void (__stdcall *TriggerHapticPulse)( vr::TrackedDeviceIndex_t unControllerDeviceIndex, uint32_t unAxisId, unsigned short usDurationMicroSec );
+	const char *(__stdcall *GetButtonIdNameFromEnum)( EVRButtonId eButtonId );
+	const char *(__stdcall *GetControllerAxisTypeNameFromEnum)( EVRControllerAxisType eAxisType );
+	bool (__stdcall *IsInputAvailable)();
+	bool (__stdcall *IsSteamVRDrawingControllers)();
+	bool (__stdcall *ShouldApplicationPause)();
+	bool (__stdcall *ShouldApplicationReduceRenderingWork)();
+	vr::EVRFirmwareError (__stdcall *PerformFirmwareUpdate)( vr::TrackedDeviceIndex_t unDeviceIndex );
+	void (__stdcall *AcknowledgeQuit_Exiting)();
+	uint32_t (__stdcall *GetAppContainerFilePaths)(  char *pchBuffer, uint32_t unBufferSize );
+	const char *(__stdcall *GetRuntimeVersion)();
+};
+
 class IVRSystem
 {
+	VR_IVRSystem_FnTable _table;
 public:
 
 
@@ -2073,43 +2124,43 @@ public:
 	// ------------------------------------
 
 	/** Suggested size for the intermediate render target that the distortion pulls from. */
-	virtual void GetRecommendedRenderTargetSize( uint32_t *pnWidth, uint32_t *pnHeight ) = 0;
+	void GetRecommendedRenderTargetSize( uint32_t *pnWidth, uint32_t *pnHeight ) { _table.GetRecommendedRenderTargetSize(pnWidth, pnHeight); }
 
 	/** The projection matrix for the specified eye */
-	virtual HmdMatrix44_t GetProjectionMatrix( EVREye eEye, float fNearZ, float fFarZ ) = 0;
+	HmdMatrix44_t GetProjectionMatrix( EVREye eEye, float fNearZ, float fFarZ ) { return _table.GetProjectionMatrix(eEye, fNearZ, fFarZ); }
 
 	/** The components necessary to build your own projection matrix in case your
 	* application is doing something fancy like infinite Z */
-	virtual void GetProjectionRaw( EVREye eEye, float *pfLeft, float *pfRight, float *pfTop, float *pfBottom ) = 0;
+	void GetProjectionRaw( EVREye eEye, float *pfLeft, float *pfRight, float *pfTop, float *pfBottom ) { _table.GetProjectionRaw(eEye, pfLeft, pfRight, pfTop, pfBottom); }
 
 	/** Gets the result of the distortion function for the specified eye and input UVs. UVs go from 0,0 in
 	* the upper left of that eye's viewport and 1,1 in the lower right of that eye's viewport.
 	* Returns true for success. Otherwise, returns false, and distortion coordinates are not suitable. */
-	virtual bool ComputeDistortion( EVREye eEye, float fU, float fV, DistortionCoordinates_t *pDistortionCoordinates ) = 0;
+	bool ComputeDistortion( EVREye eEye, float fU, float fV, DistortionCoordinates_t *pDistortionCoordinates ) { return _table.ComputeDistortion(eEye, fU, fV, pDistortionCoordinates); }
 
 	/** Returns the transform from eye space to the head space. Eye space is the per-eye flavor of head
 	* space that provides stereo disparity. Instead of Model * View * Projection the sequence is Model * View * Eye^-1 * Projection.
 	* Normally View and Eye^-1 will be multiplied together and treated as View in your application.
 	*/
-	virtual HmdMatrix34_t GetEyeToHeadTransform( EVREye eEye ) = 0;
+	HmdMatrix34_t GetEyeToHeadTransform( EVREye eEye ) { return _table.GetEyeToHeadTransform(eEye); }
 
 	/** Returns the number of elapsed seconds since the last recorded vsync event. This
 	*	will come from a vsync timer event in the timer if possible or from the application-reported
 	*   time if that is not available. If no vsync times are available the function will
 	*   return zero for vsync time and frame counter and return false from the method. */
-	virtual bool GetTimeSinceLastVsync( float *pfSecondsSinceLastVsync, uint64_t *pulFrameCounter ) = 0;
+	bool GetTimeSinceLastVsync( float *pfSecondsSinceLastVsync, uint64_t *pulFrameCounter ) { return _table.GetTimeSinceLastVsync(pfSecondsSinceLastVsync, pulFrameCounter); }
 
 	/** [D3D9 Only]
 	* Returns the adapter index that the user should pass into CreateDevice to set up D3D9 in such
 	* a way that it can go full screen exclusive on the HMD. Returns -1 if there was an error.
 	*/
-	virtual int32_t GetD3D9AdapterIndex() = 0;
+	int32_t GetD3D9AdapterIndex() { return _table.GetD3D9AdapterIndex(); }
 
 	/** [D3D10/11 Only]
 	* Returns the adapter index that the user should pass into EnumAdapters to create the device
 	* and swap chain in DX10 and DX11. If an error occurs the index will be set to -1.
 	*/
-	virtual void GetDXGIOutputInfo( int32_t *pnAdapterIndex ) = 0;
+	void GetDXGIOutputInfo( int32_t *pnAdapterIndex ) { _table.GetDXGIOutputInfo(pnAdapterIndex); }
 
 	/**
 	 * Returns platform- and texture-type specific adapter identification so that applications and the
@@ -2133,17 +2184,17 @@ public:
 	 *  Pre 10.13 for TextureType_OpenGL returns 0, as there is no dependable way to correlate the HMDs MTLDevice
 	 *   with a GL Renderer.
 	 */
-	virtual void GetOutputDevice( uint64_t *pnDevice, ETextureType textureType, VkInstance_T *pInstance = nullptr ) = 0;
+	void GetOutputDevice( uint64_t *pnDevice, ETextureType textureType, VkInstance_T *pInstance = nullptr ) { _table.GetOutputDevice(pnDevice, textureType, pInstance); }
 
 	// ------------------------------------
 	// Display Mode methods
 	// ------------------------------------
 
 	/** Use to determine if the headset display is part of the desktop (i.e. extended) or hidden (i.e. direct mode). */
-	virtual bool IsDisplayOnDesktop() = 0;
+	bool IsDisplayOnDesktop() { return _table.IsDisplayOnDesktop(); }
 
 	/** Set the display visibility (true = extended, false = direct mode).  Return value of true indicates that the change was successful. */
-	virtual bool SetDisplayVisibility( bool bIsVisibleOnDesktop ) = 0;
+	bool SetDisplayVisibility( bool bIsVisibleOnDesktop ) { return _table.SetDisplayVisibility(bIsVisibleOnDesktop); }
 
 	// ------------------------------------
 	// Tracking Methods
@@ -2166,7 +2217,7 @@ public:
 	* probably not be used unless the application is the Chaperone calibration tool itself, but will provide
 	* poses relative to the hardware-specific coordinate system in the driver.
 	*/
-	virtual void GetDeviceToAbsoluteTrackingPose( ETrackingUniverseOrigin eOrigin, float fPredictedSecondsToPhotonsFromNow, VR_ARRAY_COUNT(unTrackedDevicePoseArrayCount) TrackedDevicePose_t *pTrackedDevicePoseArray, uint32_t unTrackedDevicePoseArrayCount ) = 0;
+	void GetDeviceToAbsoluteTrackingPose( ETrackingUniverseOrigin eOrigin, float fPredictedSecondsToPhotonsFromNow, VR_ARRAY_COUNT(unTrackedDevicePoseArrayCount) TrackedDevicePose_t *pTrackedDevicePoseArray, uint32_t unTrackedDevicePoseArrayCount ) { _table.GetDeviceToAbsoluteTrackingPose(eOrigin, fPredictedSecondsToPhotonsFromNow, pTrackedDevicePoseArray, unTrackedDevicePoseArrayCount); }
 
 	/** Returns the transform from the seated zero pose to the standing absolute tracking system. This allows
 	* applications to represent the seated origin to used or transform object positions from one coordinate
@@ -2174,30 +2225,30 @@ public:
 	*
 	* The seated origin may or may not be inside the Play Area or Collision Bounds returned by IVRChaperone. Its position
 	* depends on what the user has set from the Dashboard settings and previous calls to ResetSeatedZeroPose. */
-	virtual HmdMatrix34_t GetSeatedZeroPoseToStandingAbsoluteTrackingPose() = 0;
+	HmdMatrix34_t GetSeatedZeroPoseToStandingAbsoluteTrackingPose() { return _table.GetSeatedZeroPoseToStandingAbsoluteTrackingPose(); }
 
 	/** Returns the transform from the tracking origin to the standing absolute tracking system. This allows
 	* applications to convert from raw tracking space to the calibrated standing coordinate system. */
-	virtual HmdMatrix34_t GetRawZeroPoseToStandingAbsoluteTrackingPose() = 0;
+	HmdMatrix34_t GetRawZeroPoseToStandingAbsoluteTrackingPose() { return _table.GetRawZeroPoseToStandingAbsoluteTrackingPose(); }
 
 	/** Get a sorted array of device indices of a given class of tracked devices (e.g. controllers).  Devices are sorted right to left
 	* relative to the specified tracked device (default: hmd -- pass in -1 for absolute tracking space).  Returns the number of devices
 	* in the list, or the size of the array needed if not large enough. */
-	virtual uint32_t GetSortedTrackedDeviceIndicesOfClass( ETrackedDeviceClass eTrackedDeviceClass, VR_ARRAY_COUNT(unTrackedDeviceIndexArrayCount) vr::TrackedDeviceIndex_t *punTrackedDeviceIndexArray, uint32_t unTrackedDeviceIndexArrayCount, vr::TrackedDeviceIndex_t unRelativeToTrackedDeviceIndex = k_unTrackedDeviceIndex_Hmd ) = 0;
+	uint32_t GetSortedTrackedDeviceIndicesOfClass( ETrackedDeviceClass eTrackedDeviceClass, VR_ARRAY_COUNT(unTrackedDeviceIndexArrayCount) vr::TrackedDeviceIndex_t *punTrackedDeviceIndexArray, uint32_t unTrackedDeviceIndexArrayCount, vr::TrackedDeviceIndex_t unRelativeToTrackedDeviceIndex = k_unTrackedDeviceIndex_Hmd ) { return _table.GetSortedTrackedDeviceIndicesOfClass(eTrackedDeviceClass, punTrackedDeviceIndexArray, unTrackedDeviceIndexArrayCount, unRelativeToTrackedDeviceIndex); }
 
 	/** Returns the level of activity on the device. */
-	virtual EDeviceActivityLevel GetTrackedDeviceActivityLevel( vr::TrackedDeviceIndex_t unDeviceId ) = 0;
+	EDeviceActivityLevel GetTrackedDeviceActivityLevel( vr::TrackedDeviceIndex_t unDeviceId ) { return _table.GetTrackedDeviceActivityLevel(unDeviceId); }
 
 	/** Convenience utility to apply the specified transform to the specified pose.
 	*   This properly transforms all pose components, including velocity and angular velocity
 	*/
-	virtual void ApplyTransform( TrackedDevicePose_t *pOutputPose, const TrackedDevicePose_t *pTrackedDevicePose, const HmdMatrix34_t *pTransform ) = 0;
+	void ApplyTransform( TrackedDevicePose_t *pOutputPose, const TrackedDevicePose_t *pTrackedDevicePose, const HmdMatrix34_t *pTransform ) { _table.ApplyTransform(pOutputPose, pTrackedDevicePose, pTransform); }
 
 	/** Returns the device index associated with a specific role, for example the left hand or the right hand. This function is deprecated in favor of the new IVRInput system. */
-	virtual vr::TrackedDeviceIndex_t GetTrackedDeviceIndexForControllerRole( vr::ETrackedControllerRole unDeviceType ) = 0;
+	vr::TrackedDeviceIndex_t GetTrackedDeviceIndexForControllerRole( vr::ETrackedControllerRole unDeviceType ) { return _table.GetTrackedDeviceIndexForControllerRole(unDeviceType); }
 
 	/** Returns the controller type associated with a device index. This function is deprecated in favor of the new IVRInput system. */
-	virtual vr::ETrackedControllerRole GetControllerRoleForTrackedDeviceIndex( vr::TrackedDeviceIndex_t unDeviceIndex ) = 0;
+	vr::ETrackedControllerRole GetControllerRoleForTrackedDeviceIndex( vr::TrackedDeviceIndex_t unDeviceIndex ) { return _table.GetControllerRoleForTrackedDeviceIndex(unDeviceIndex); }
 
 	// ------------------------------------
 	// Property methods
@@ -2210,39 +2261,39 @@ public:
 	* To determine which devices exist on the system, just loop from 0 to k_unMaxTrackedDeviceCount and check
 	* the device class. Every device with something other than TrackedDevice_Invalid is associated with an
 	* actual tracked device. */
-	virtual ETrackedDeviceClass GetTrackedDeviceClass( vr::TrackedDeviceIndex_t unDeviceIndex ) = 0;
+	ETrackedDeviceClass GetTrackedDeviceClass( vr::TrackedDeviceIndex_t unDeviceIndex ) { return _table.GetTrackedDeviceClass(unDeviceIndex); }
 
 	/** Returns true if there is a device connected in this slot. */
-	virtual bool IsTrackedDeviceConnected( vr::TrackedDeviceIndex_t unDeviceIndex ) = 0;
+	bool IsTrackedDeviceConnected( vr::TrackedDeviceIndex_t unDeviceIndex ) { return _table.IsTrackedDeviceConnected(unDeviceIndex); }
 
 	/** Returns a bool property. If the device index is not valid or the property is not a bool type this function will return false. */
-	virtual bool GetBoolTrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) = 0;
+	bool GetBoolTrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) { return _table.GetBoolTrackedDeviceProperty(unDeviceIndex, prop, pError); }
 
 	/** Returns a float property. If the device index is not valid or the property is not a float type this function will return 0. */
-	virtual float GetFloatTrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) = 0;
+	float GetFloatTrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) { return _table.GetFloatTrackedDeviceProperty(unDeviceIndex, prop, pError); }
 
 	/** Returns an int property. If the device index is not valid or the property is not a int type this function will return 0. */
-	virtual int32_t GetInt32TrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) = 0;
+	int32_t GetInt32TrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) { return _table.GetInt32TrackedDeviceProperty(unDeviceIndex, prop, pError); }
 
 	/** Returns a uint64 property. If the device index is not valid or the property is not a uint64 type this function will return 0. */
-	virtual uint64_t GetUint64TrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) = 0;
+	uint64_t GetUint64TrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) { return _table.GetUint64TrackedDeviceProperty(unDeviceIndex, prop, pError); }
 
 	/** Returns a matrix property. If the device index is not valid or the property is not a matrix type, this function will return identity. */
-	virtual HmdMatrix34_t GetMatrix34TrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) = 0;
+	HmdMatrix34_t GetMatrix34TrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, ETrackedPropertyError *pError = 0L ) { return _table.GetMatrix34TrackedDeviceProperty(unDeviceIndex, prop, pError); }
 
 	/** Returns an array of one type of property. If the device index is not valid or the property is not a single value or an array of the specified type,
 	* this function will return 0. Otherwise it returns the number of bytes necessary to hold the array of properties. If unBufferSize is
 	* greater than the returned size and pBuffer is non-NULL, pBuffer is filled with the contents of array of properties. */
-	virtual uint32_t GetArrayTrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, PropertyTypeTag_t propType, void *pBuffer, uint32_t unBufferSize, ETrackedPropertyError *pError = 0L ) = 0;
+	uint32_t GetArrayTrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, PropertyTypeTag_t propType, void *pBuffer, uint32_t unBufferSize, ETrackedPropertyError *pError = 0L ) { return _table.GetArrayTrackedDeviceProperty(unDeviceIndex, prop, propType, pBuffer, unBufferSize, pError); }
 
 	/** Returns a string property. If the device index is not valid or the property is not a string type this function will
 	* return 0. Otherwise it returns the length of the number of bytes necessary to hold this string including the trailing
 	* null. Strings will always fit in buffers of k_unMaxPropertyStringSize characters. */
-	virtual uint32_t GetStringTrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize, ETrackedPropertyError *pError = 0L ) = 0;
+	uint32_t GetStringTrackedDeviceProperty( vr::TrackedDeviceIndex_t unDeviceIndex, ETrackedDeviceProperty prop, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize, ETrackedPropertyError *pError = 0L ) { return _table.GetStringTrackedDeviceProperty(unDeviceIndex, prop, pchValue, unBufferSize, pError); }
 
 	/** returns a string that corresponds with the specified property error. The string will be the name
 	* of the error enum value for all valid error codes */
-	virtual const char *GetPropErrorNameFromEnum( ETrackedPropertyError error ) = 0;
+	const char *GetPropErrorNameFromEnum( ETrackedPropertyError error ) { return _table.GetPropErrorNameFromEnum(error); }
 
 	// ------------------------------------
 	// Event methods
@@ -2250,16 +2301,16 @@ public:
 
 	/** Returns true and fills the event with the next event on the queue if there is one. If there are no events
 	* this method returns false. uncbVREvent should be the size in bytes of the VREvent_t struct */
-	virtual bool PollNextEvent( VREvent_t *pEvent, uint32_t uncbVREvent ) = 0;
+	bool PollNextEvent( VREvent_t *pEvent, uint32_t uncbVREvent ) { return _table.PollNextEvent(pEvent, uncbVREvent); }
 
 	/** Returns true and fills the event with the next event on the queue if there is one. If there are no events
 	* this method returns false. Fills in the pose of the associated tracked device in the provided pose struct.
 	* This pose will always be older than the call to this function and should not be used to render the device.
 	uncbVREvent should be the size in bytes of the VREvent_t struct */
-	virtual bool PollNextEventWithPose( ETrackingUniverseOrigin eOrigin, VREvent_t *pEvent, uint32_t uncbVREvent, vr::TrackedDevicePose_t *pTrackedDevicePose ) = 0;
+	bool PollNextEventWithPose( ETrackingUniverseOrigin eOrigin, VREvent_t *pEvent, uint32_t uncbVREvent, vr::TrackedDevicePose_t *pTrackedDevicePose ) { return _table.PollNextEventWithPose(eOrigin, pEvent, uncbVREvent, pTrackedDevicePose); }
 
 	/** returns the name of an EVREvent enum value */
-	virtual const char *GetEventTypeNameFromEnum( EVREventType eType ) = 0;
+	const char *GetEventTypeNameFromEnum( EVREventType eType ) { return _table.GetEventTypeNameFromEnum(eType); }
 
 	// ------------------------------------
 	// Rendering helper methods
@@ -2273,7 +2324,7 @@ public:
 	* Setting the bInverse argument to true will produce the visible area mesh that is commonly used in place of full-screen quads. The visible area mesh covers all of the pixels the hidden area mesh does not cover.
 	* Setting the bLineLoop argument will return a line loop of vertices in HiddenAreaMesh_t->pVertexData with HiddenAreaMesh_t->unTriangleCount set to the number of vertices.
 	*/
-	virtual HiddenAreaMesh_t GetHiddenAreaMesh( EVREye eEye, EHiddenAreaMeshType type = k_eHiddenAreaMesh_Standard ) = 0;
+	HiddenAreaMesh_t GetHiddenAreaMesh( EVREye eEye, EHiddenAreaMeshType type = k_eHiddenAreaMesh_Standard ) { return _table.GetHiddenAreaMesh(eEye, type); }
 
 	// ------------------------------------
 	// Controller methods
@@ -2281,38 +2332,38 @@ public:
 
 	/** Fills the supplied struct with the current state of the controller. Returns false if the controller index
 	* is invalid. This function is deprecated in favor of the new IVRInput system. */
-	virtual bool GetControllerState( vr::TrackedDeviceIndex_t unControllerDeviceIndex, vr::VRControllerState_t *pControllerState, uint32_t unControllerStateSize ) = 0;
+	bool GetControllerState( vr::TrackedDeviceIndex_t unControllerDeviceIndex, vr::VRControllerState_t *pControllerState, uint32_t unControllerStateSize ) { return _table.GetControllerState(unControllerDeviceIndex, pControllerState, unControllerStateSize); }
 
 	/** fills the supplied struct with the current state of the controller and the provided pose with the pose of
 	* the controller when the controller state was updated most recently. Use this form if you need a precise controller
 	* pose as input to your application when the user presses or releases a button. This function is deprecated in favor of the new IVRInput system. */
-	virtual bool GetControllerStateWithPose( ETrackingUniverseOrigin eOrigin, vr::TrackedDeviceIndex_t unControllerDeviceIndex, vr::VRControllerState_t *pControllerState, uint32_t unControllerStateSize, TrackedDevicePose_t *pTrackedDevicePose ) = 0;
+	bool GetControllerStateWithPose( ETrackingUniverseOrigin eOrigin, vr::TrackedDeviceIndex_t unControllerDeviceIndex, vr::VRControllerState_t *pControllerState, uint32_t unControllerStateSize, TrackedDevicePose_t *pTrackedDevicePose ) { return _table.GetControllerStateWithPose(eOrigin, unControllerDeviceIndex, pControllerState, unControllerStateSize, pTrackedDevicePose); }
 
 	/** Trigger a single haptic pulse on a controller. After this call the application may not trigger another haptic pulse on this controller
 	* and axis combination for 5ms. This function is deprecated in favor of the new IVRInput system. */
-	virtual void TriggerHapticPulse( vr::TrackedDeviceIndex_t unControllerDeviceIndex, uint32_t unAxisId, unsigned short usDurationMicroSec ) = 0;
+	void TriggerHapticPulse( vr::TrackedDeviceIndex_t unControllerDeviceIndex, uint32_t unAxisId, unsigned short usDurationMicroSec ) { _table.TriggerHapticPulse(unControllerDeviceIndex, unAxisId, usDurationMicroSec); }
 
 	/** returns the name of an EVRButtonId enum value. This function is deprecated in favor of the new IVRInput system.  */
-	virtual const char *GetButtonIdNameFromEnum( EVRButtonId eButtonId ) = 0;
+	const char *GetButtonIdNameFromEnum( EVRButtonId eButtonId ) { return _table.GetButtonIdNameFromEnum(eButtonId); }
 
 	/** returns the name of an EVRControllerAxisType enum value. This function is deprecated in favor of the new IVRInput system. */
-	virtual const char *GetControllerAxisTypeNameFromEnum( EVRControllerAxisType eAxisType ) = 0;
+	const char *GetControllerAxisTypeNameFromEnum( EVRControllerAxisType eAxisType ) { return _table.GetControllerAxisTypeNameFromEnum(eAxisType); }
 
 	/** Returns true if this application is receiving input from the system. This would return false if
 	* system-related functionality is consuming the input stream. */
-	virtual bool IsInputAvailable() = 0;
+	bool IsInputAvailable() { return _table.IsInputAvailable(); }
 
 	/** Returns true SteamVR is drawing controllers on top of the application. Applications should consider
 	* not drawing anything attached to the user's hands in this case. */
-	virtual bool IsSteamVRDrawingControllers() = 0;
+	bool IsSteamVRDrawingControllers() { return _table.IsSteamVRDrawingControllers(); }
 
 	/** Returns true if the user has put SteamVR into a mode that is distracting them from the application.
 	* For applications where this is appropriate, the application should pause ongoing activity. */
-	virtual bool ShouldApplicationPause() = 0;
+	bool ShouldApplicationPause() { return _table.ShouldApplicationPause(); }
 
 	/** Returns true if SteamVR is doing significant rendering work and the game should do what it can to reduce
 	* its own workload. One common way to do this is to reduce the size of the render target provided for each eye. */
-	virtual bool ShouldApplicationReduceRenderingWork() = 0;
+	bool ShouldApplicationReduceRenderingWork() { return _table.ShouldApplicationReduceRenderingWork(); }
 
 	// ------------------------------------
 	// Firmware methods
@@ -2323,7 +2374,7 @@ public:
 	 * Use the properties Prop_Firmware_UpdateAvailable_Bool, Prop_Firmware_ManualUpdate_Bool, and Prop_Firmware_ManualUpdateURL_String
 	 * to figure our whether a firmware update is available, and to figure out whether its a manual update
 	 * Prop_Firmware_ManualUpdateURL_String should point to an URL describing the manual update process */
-	virtual vr::EVRFirmwareError PerformFirmwareUpdate( vr::TrackedDeviceIndex_t unDeviceIndex ) = 0;
+	vr::EVRFirmwareError PerformFirmwareUpdate( vr::TrackedDeviceIndex_t unDeviceIndex ) { return _table.PerformFirmwareUpdate(unDeviceIndex); }
 
 	// ------------------------------------
 	// Application life cycle methods
@@ -2331,7 +2382,7 @@ public:
 
 	/** Call this to acknowledge to the system that VREvent_Quit has been received and that the process is exiting.
 	* This extends the timeout until the process is killed. */
-	virtual void AcknowledgeQuit_Exiting() = 0;
+	void AcknowledgeQuit_Exiting() { _table.AcknowledgeQuit_Exiting(); }
 
 	// -------------------------------------
 	// App container sandbox methods
@@ -2340,7 +2391,7 @@ public:
 	/** Retrieves a null-terminated, semicolon-delimited list of UTF8 file paths that an application
 	* must have read access to when running inside of an app container. Returns the number of bytes
 	* needed to hold the list. */
-	virtual uint32_t GetAppContainerFilePaths( VR_OUT_STRING() char *pchBuffer, uint32_t unBufferSize ) = 0;
+	uint32_t GetAppContainerFilePaths( VR_OUT_STRING() char *pchBuffer, uint32_t unBufferSize ) { return _table.GetAppContainerFilePaths(pchBuffer, unBufferSize); }
 
 	// -------------------------------------
 	// System methods
@@ -2351,11 +2402,11 @@ public:
 	* NOTE: Is it not appropriate to use this version to test for the presence of any SteamVR feature. Only use this version
 	* number for logging or showing to a user, and not to try to detect anything at runtime. When appropriate, feature-specific
 	* presence information is provided by other APIs. */
-	virtual const char *GetRuntimeVersion() = 0;
+	const char *GetRuntimeVersion() { return _table.GetRuntimeVersion(); }
 
 };
 
-static const char * const IVRSystem_Version = "IVRSystem_022";
+static const char * const IVRSystem_Version = "FnTable:IVRSystem_022";
 
 }
 
@@ -2444,104 +2495,139 @@ namespace vr
 	static const char * const k_pch_MimeType_HomeApp		= "vr/home";
 	static const char * const k_pch_MimeType_GameTheater	= "vr/game_theater";
 
+	struct VR_IVRApplications_FnTable
+	{
+		EVRApplicationError (__stdcall *AddApplicationManifest)( const char *pchApplicationManifestFullPath, bool bTemporary);
+		EVRApplicationError (__stdcall *RemoveApplicationManifest)( const char *pchApplicationManifestFullPath );
+		bool (__stdcall *IsApplicationInstalled)( const char *pchAppKey );
+		uint32_t (__stdcall *GetApplicationCount)();
+		EVRApplicationError (__stdcall *GetApplicationKeyByIndex)( uint32_t unApplicationIndex,  char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen );
+		EVRApplicationError (__stdcall *GetApplicationKeyByProcessId)( uint32_t unProcessId,  char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen );
+		EVRApplicationError (__stdcall *LaunchApplication)( const char *pchAppKey );
+		EVRApplicationError (__stdcall *LaunchTemplateApplication)( const char *pchTemplateAppKey, const char *pchNewAppKey,  const AppOverrideKeys_t *pKeys, uint32_t unKeys );
+		vr::EVRApplicationError (__stdcall *LaunchApplicationFromMimeType)( const char *pchMimeType, const char *pchArgs );
+		EVRApplicationError (__stdcall *LaunchDashboardOverlay)( const char *pchAppKey );
+		bool (__stdcall *CancelApplicationLaunch)( const char *pchAppKey );
+		EVRApplicationError (__stdcall *IdentifyApplication)( uint32_t unProcessId, const char *pchAppKey );
+		uint32_t (__stdcall *GetApplicationProcessId)( const char *pchAppKey );
+		const char *(__stdcall *GetApplicationsErrorNameFromEnum)( EVRApplicationError error );
+		uint32_t (__stdcall *GetApplicationPropertyString)( const char *pchAppKey, EVRApplicationProperty eProperty,  char *pchPropertyValueBuffer, uint32_t unPropertyValueBufferLen, EVRApplicationError *peError);
+		bool (__stdcall *GetApplicationPropertyBool)( const char *pchAppKey, EVRApplicationProperty eProperty, EVRApplicationError *peError);
+		uint64_t (__stdcall *GetApplicationPropertyUint64)( const char *pchAppKey, EVRApplicationProperty eProperty, EVRApplicationError *peError);
+		EVRApplicationError (__stdcall *SetApplicationAutoLaunch)( const char *pchAppKey, bool bAutoLaunch );
+		bool (__stdcall *GetApplicationAutoLaunch)( const char *pchAppKey );
+		EVRApplicationError (__stdcall *SetDefaultApplicationForMimeType)( const char *pchAppKey, const char *pchMimeType );
+		bool (__stdcall *GetDefaultApplicationForMimeType)( const char *pchMimeType,  char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen );
+		bool (__stdcall *GetApplicationSupportedMimeTypes)( const char *pchAppKey,  char *pchMimeTypesBuffer, uint32_t unMimeTypesBuffer );
+		uint32_t (__stdcall *GetApplicationsThatSupportMimeType)( const char *pchMimeType,  char *pchAppKeysThatSupportBuffer, uint32_t unAppKeysThatSupportBuffer );
+		uint32_t (__stdcall *GetApplicationLaunchArguments)( uint32_t unHandle,  char *pchArgs, uint32_t unArgs );
+		EVRApplicationError (__stdcall *GetStartingApplication)(  char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen );
+		EVRSceneApplicationState (__stdcall *GetSceneApplicationState)();
+		EVRApplicationError (__stdcall *PerformApplicationPrelaunchCheck)( const char *pchAppKey );
+		const char *(__stdcall *GetSceneApplicationStateNameFromEnum)( EVRSceneApplicationState state );
+		EVRApplicationError (__stdcall *LaunchInternalProcess)( const char *pchBinaryPath, const char *pchArguments, const char *pchWorkingDirectory );
+		uint32_t (__stdcall *GetCurrentSceneProcessId)();
+	};
+
 	class IVRApplications
 	{
+		VR_IVRApplications_FnTable _table;
 	public:
 
 		// ---------------  Application management  --------------- //
 
 		/** Adds an application manifest to the list to load when building the list of installed applications.
 		* Temporary manifests are not automatically loaded */
-		virtual EVRApplicationError AddApplicationManifest( const char *pchApplicationManifestFullPath, bool bTemporary = false ) = 0;
+		EVRApplicationError AddApplicationManifest( const char *pchApplicationManifestFullPath, bool bTemporary = false ) { return _table.AddApplicationManifest(pchApplicationManifestFullPath, bTemporary); }
 
 		/** Removes an application manifest from the list to load when building the list of installed applications. */
-		virtual EVRApplicationError RemoveApplicationManifest( const char *pchApplicationManifestFullPath ) = 0;
+		EVRApplicationError RemoveApplicationManifest( const char *pchApplicationManifestFullPath ) { return _table.RemoveApplicationManifest(pchApplicationManifestFullPath); }
 
 		/** Returns true if an application is installed */
-		virtual bool IsApplicationInstalled( const char *pchAppKey ) = 0;
+		bool IsApplicationInstalled( const char *pchAppKey ) { return _table.IsApplicationInstalled(pchAppKey); }
 
 		/** Returns the number of applications available in the list */
-		virtual uint32_t GetApplicationCount() = 0;
+		uint32_t GetApplicationCount() { return _table.GetApplicationCount(); }
 
 		/** Returns the key of the specified application. The index is at least 0 and is less than the return
 		* value of GetApplicationCount(). The buffer should be at least k_unMaxApplicationKeyLength in order to
 		* fit the key. */
-		virtual EVRApplicationError GetApplicationKeyByIndex( uint32_t unApplicationIndex, VR_OUT_STRING() char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen ) = 0;
+		EVRApplicationError GetApplicationKeyByIndex( uint32_t unApplicationIndex, VR_OUT_STRING() char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen ) { return _table.GetApplicationKeyByIndex(unApplicationIndex, pchAppKeyBuffer, unAppKeyBufferLen); }
 
 		/** Returns the key of the application for the specified Process Id. The buffer should be at least
 		* k_unMaxApplicationKeyLength in order to fit the key. */
-		virtual EVRApplicationError GetApplicationKeyByProcessId( uint32_t unProcessId, VR_OUT_STRING() char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen ) = 0;
+		EVRApplicationError GetApplicationKeyByProcessId( uint32_t unProcessId, VR_OUT_STRING() char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen ) { return _table.GetApplicationKeyByProcessId(unProcessId, pchAppKeyBuffer, unAppKeyBufferLen); }
 
 		/** Launches the application. The existing scene application will exit and then the new application will start.
 		* This call is not valid for dashboard overlay applications. */
-		virtual EVRApplicationError LaunchApplication( const char *pchAppKey ) = 0;
+		EVRApplicationError LaunchApplication( const char *pchAppKey ) { return _table.LaunchApplication(pchAppKey); }
 
 		/** Launches an instance of an application of type template, with its app key being pchNewAppKey (which must be unique) and optionally override sections
 		* from the manifest file via AppOverrideKeys_t
 		*/
-		virtual EVRApplicationError LaunchTemplateApplication( const char *pchTemplateAppKey, const char *pchNewAppKey, VR_ARRAY_COUNT( unKeys ) const AppOverrideKeys_t *pKeys, uint32_t unKeys ) = 0;
+		EVRApplicationError LaunchTemplateApplication( const char *pchTemplateAppKey, const char *pchNewAppKey, VR_ARRAY_COUNT( unKeys ) const AppOverrideKeys_t *pKeys, uint32_t unKeys ) { return _table.LaunchTemplateApplication(pchTemplateAppKey, pchNewAppKey, pKeys, unKeys); }
 
 		/** launches the application currently associated with this mime type and passes it the option args, typically the filename or object name of the item being launched */
-		virtual vr::EVRApplicationError LaunchApplicationFromMimeType( const char *pchMimeType, const char *pchArgs ) = 0;
+		vr::EVRApplicationError LaunchApplicationFromMimeType( const char *pchMimeType, const char *pchArgs ) { return _table.LaunchApplicationFromMimeType(pchMimeType, pchArgs); }
 
 		/** Launches the dashboard overlay application if it is not already running. This call is only valid for
 		* dashboard overlay applications. */
-		virtual EVRApplicationError LaunchDashboardOverlay( const char *pchAppKey ) = 0;
+		EVRApplicationError LaunchDashboardOverlay( const char *pchAppKey ) { return _table.LaunchDashboardOverlay(pchAppKey); }
 
 		/** Cancel a pending launch for an application */
-		virtual bool CancelApplicationLaunch( const char *pchAppKey ) = 0;
+		bool CancelApplicationLaunch( const char *pchAppKey ) { return _table.CancelApplicationLaunch(pchAppKey); }
 
 		/** Identifies a running application. OpenVR can't always tell which process started in response
 		* to a URL. This function allows a URL handler (or the process itself) to identify the app key
 		* for the now running application. Passing a process ID of 0 identifies the calling process.
 		* The application must be one that's known to the system via a call to AddApplicationManifest. */
-		virtual EVRApplicationError IdentifyApplication( uint32_t unProcessId, const char *pchAppKey ) = 0;
+		EVRApplicationError IdentifyApplication( uint32_t unProcessId, const char *pchAppKey ) { return _table.IdentifyApplication(unProcessId, pchAppKey); }
 
 		/** Returns the process ID for an application. Return 0 if the application was not found or is not running. */
-		virtual uint32_t GetApplicationProcessId( const char *pchAppKey ) = 0;
+		uint32_t GetApplicationProcessId( const char *pchAppKey ) { return _table.GetApplicationProcessId(pchAppKey); }
 
 		/** Returns a string for an applications error */
-		virtual const char *GetApplicationsErrorNameFromEnum( EVRApplicationError error ) = 0;
+		const char *GetApplicationsErrorNameFromEnum( EVRApplicationError error ) { return _table.GetApplicationsErrorNameFromEnum(error); }
 
 		// ---------------  Application properties  --------------- //
 
 		/** Returns a value for an application property. The required buffer size to fit this value will be returned. */
-		virtual uint32_t GetApplicationPropertyString( const char *pchAppKey, EVRApplicationProperty eProperty, VR_OUT_STRING() char *pchPropertyValueBuffer, uint32_t unPropertyValueBufferLen, EVRApplicationError *peError = nullptr ) = 0;
+		uint32_t GetApplicationPropertyString( const char *pchAppKey, EVRApplicationProperty eProperty, VR_OUT_STRING() char *pchPropertyValueBuffer, uint32_t unPropertyValueBufferLen, EVRApplicationError *peError = nullptr ) { return _table.GetApplicationPropertyString(pchAppKey, eProperty, pchPropertyValueBuffer, unPropertyValueBufferLen, peError); }
 
 		/** Returns a bool value for an application property. Returns false in all error cases. */
-		virtual bool GetApplicationPropertyBool( const char *pchAppKey, EVRApplicationProperty eProperty, EVRApplicationError *peError = nullptr ) = 0;
+		bool GetApplicationPropertyBool( const char *pchAppKey, EVRApplicationProperty eProperty, EVRApplicationError *peError = nullptr ) { return _table.GetApplicationPropertyBool(pchAppKey, eProperty, peError); }
 
 		/** Returns a uint64 value for an application property. Returns 0 in all error cases. */
-		virtual uint64_t GetApplicationPropertyUint64( const char *pchAppKey, EVRApplicationProperty eProperty, EVRApplicationError *peError = nullptr ) = 0;
+		uint64_t GetApplicationPropertyUint64( const char *pchAppKey, EVRApplicationProperty eProperty, EVRApplicationError *peError = nullptr ) { return _table.GetApplicationPropertyUint64(pchAppKey, eProperty, peError); }
 
 		/** Sets the application auto-launch flag. This is only valid for applications which return true for VRApplicationProperty_IsDashboardOverlay_Bool. */
-		virtual EVRApplicationError SetApplicationAutoLaunch( const char *pchAppKey, bool bAutoLaunch ) = 0;
+		EVRApplicationError SetApplicationAutoLaunch( const char *pchAppKey, bool bAutoLaunch ) { return _table.SetApplicationAutoLaunch(pchAppKey, bAutoLaunch); }
 
 		/** Gets the application auto-launch flag. This is only valid for applications which return true for VRApplicationProperty_IsDashboardOverlay_Bool. */
-		virtual bool GetApplicationAutoLaunch( const char *pchAppKey ) = 0;
+		bool GetApplicationAutoLaunch( const char *pchAppKey ) { return _table.GetApplicationAutoLaunch(pchAppKey); }
 
 		/** Adds this mime-type to the list of supported mime types for this application*/
-		virtual EVRApplicationError SetDefaultApplicationForMimeType( const char *pchAppKey, const char *pchMimeType ) = 0;
+		EVRApplicationError SetDefaultApplicationForMimeType( const char *pchAppKey, const char *pchMimeType ) { return _table.SetDefaultApplicationForMimeType(pchAppKey, pchMimeType); }
 
 		/** return the app key that will open this mime type */
-		virtual bool GetDefaultApplicationForMimeType( const char *pchMimeType, VR_OUT_STRING() char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen ) = 0;
+		bool GetDefaultApplicationForMimeType( const char *pchMimeType, VR_OUT_STRING() char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen ) { return _table.GetDefaultApplicationForMimeType(pchMimeType, pchAppKeyBuffer, unAppKeyBufferLen); }
 
 		/** Get the list of supported mime types for this application, comma-delimited */
-		virtual bool GetApplicationSupportedMimeTypes( const char *pchAppKey, VR_OUT_STRING() char *pchMimeTypesBuffer, uint32_t unMimeTypesBuffer ) = 0;
+		bool GetApplicationSupportedMimeTypes( const char *pchAppKey, VR_OUT_STRING() char *pchMimeTypesBuffer, uint32_t unMimeTypesBuffer ) { return _table.GetApplicationSupportedMimeTypes(pchAppKey, pchMimeTypesBuffer, unMimeTypesBuffer); }
 
 		/** Get the list of app-keys that support this mime type, comma-delimited, the return value is number of bytes you need to return the full string */
-		virtual uint32_t GetApplicationsThatSupportMimeType( const char *pchMimeType, VR_OUT_STRING() char *pchAppKeysThatSupportBuffer, uint32_t unAppKeysThatSupportBuffer ) = 0;
+		uint32_t GetApplicationsThatSupportMimeType( const char *pchMimeType, VR_OUT_STRING() char *pchAppKeysThatSupportBuffer, uint32_t unAppKeysThatSupportBuffer ) { return _table.GetApplicationsThatSupportMimeType(pchMimeType, pchAppKeysThatSupportBuffer, unAppKeysThatSupportBuffer); }
 
 		/** Get the args list from an app launch that had the process already running, you call this when you get a VREvent_ApplicationMimeTypeLoad */
-		virtual uint32_t GetApplicationLaunchArguments( uint32_t unHandle, VR_OUT_STRING() char *pchArgs, uint32_t unArgs ) = 0;
+		uint32_t GetApplicationLaunchArguments( uint32_t unHandle, VR_OUT_STRING() char *pchArgs, uint32_t unArgs ) { return _table.GetApplicationLaunchArguments(unHandle, pchArgs, unArgs); }
 
 		// ---------------  Transition methods --------------- //
 
 		/** Returns the app key for the application that is starting up */
-		virtual EVRApplicationError GetStartingApplication( VR_OUT_STRING() char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen ) = 0;
+		EVRApplicationError GetStartingApplication( VR_OUT_STRING() char *pchAppKeyBuffer, uint32_t unAppKeyBufferLen ) { return _table.GetStartingApplication(pchAppKeyBuffer, unAppKeyBufferLen); }
 
 		/** Returns the application transition state */
-		virtual EVRSceneApplicationState GetSceneApplicationState() = 0;
+		EVRSceneApplicationState GetSceneApplicationState() { return _table.GetSceneApplicationState(); }
 
 		/** Returns errors that would prevent the specified application from launching immediately. Calling this function will
 		* cause the current scene application to quit, so only call it when you are actually about to launch something else.
@@ -2552,25 +2638,25 @@ namespace vr
 		*   VRApplicationError_LaunchInProgress	      - A different application is already starting. This is a permanent failure.
 		*   VRApplicationError_None                   - Go ahead and launch. Everything is clear.
 		*/
-		virtual EVRApplicationError PerformApplicationPrelaunchCheck( const char *pchAppKey ) = 0;
+		EVRApplicationError PerformApplicationPrelaunchCheck( const char *pchAppKey ) { return _table.PerformApplicationPrelaunchCheck(pchAppKey); }
 
 		/** Returns a string for an application transition state */
-		virtual const char *GetSceneApplicationStateNameFromEnum( EVRSceneApplicationState state ) = 0;
+		const char *GetSceneApplicationStateNameFromEnum( EVRSceneApplicationState state ) { return _table.GetSceneApplicationStateNameFromEnum(state); }
 
 		/** Starts a subprocess within the calling application. This
 		* suppresses all application transition UI and automatically identifies the new executable
 		* as part of the same application. On success the calling process should exit immediately.
 		* If working directory is NULL or "" the directory portion of the binary path will be
 		* the working directory. */
-		virtual EVRApplicationError LaunchInternalProcess( const char *pchBinaryPath, const char *pchArguments, const char *pchWorkingDirectory ) = 0;
+		EVRApplicationError LaunchInternalProcess( const char *pchBinaryPath, const char *pchArguments, const char *pchWorkingDirectory ) { return _table.LaunchInternalProcess(pchBinaryPath, pchArguments, pchWorkingDirectory); }
 
 		/** Returns the current scene process ID according to the application system. A scene process will get scene
 		* focus once it starts rendering, but it will appear here once it calls VR_Init with the Scene application
 		* type. */
-		virtual uint32_t GetCurrentSceneProcessId() = 0;
+		uint32_t GetCurrentSceneProcessId() { return _table.GetCurrentSceneProcessId(); }
 	};
 
-	static const char * const IVRApplications_Version = "IVRApplications_007";
+	static const char * const IVRApplications_Version = "FnTable:IVRApplications_007";
 
 } // namespace vr
 
@@ -2593,29 +2679,45 @@ namespace vr
 	// The maximum length of a settings key
 	static const uint32_t k_unMaxSettingsKeyLength = 128;
 
+	struct VR_IVRSettings_FnTable
+	{
+		const char *(__stdcall *GetSettingsErrorNameFromEnum)( EVRSettingsError eError );
+		void (__stdcall *SetBool)( const char *pchSection, const char *pchSettingsKey, bool bValue, EVRSettingsError *peError);
+		void (__stdcall *SetInt32)( const char *pchSection, const char *pchSettingsKey, int32_t nValue, EVRSettingsError *peError);
+		void (__stdcall *SetFloat)( const char *pchSection, const char *pchSettingsKey, float flValue, EVRSettingsError *peError);
+		void (__stdcall *SetString)( const char *pchSection, const char *pchSettingsKey, const char *pchValue, EVRSettingsError *peError);
+		bool (__stdcall *GetBool)( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError);
+		int32_t (__stdcall *GetInt32)( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError);
+		float (__stdcall *GetFloat)( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError);
+		void (__stdcall *GetString)( const char *pchSection, const char *pchSettingsKey,  char *pchValue, uint32_t unValueLen, EVRSettingsError *peError);
+		void (__stdcall *RemoveSection)( const char *pchSection, EVRSettingsError *peError);
+		void (__stdcall *RemoveKeyInSection)( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError);
+	};
+
 	class IVRSettings
 	{
+		VR_IVRSettings_FnTable _table;
 	public:
-		virtual const char *GetSettingsErrorNameFromEnum( EVRSettingsError eError ) = 0;
+		const char *GetSettingsErrorNameFromEnum( EVRSettingsError eError ) { return _table.GetSettingsErrorNameFromEnum(eError); }
 
-		virtual void SetBool( const char *pchSection, const char *pchSettingsKey, bool bValue, EVRSettingsError *peError = nullptr ) = 0;
-		virtual void SetInt32( const char *pchSection, const char *pchSettingsKey, int32_t nValue, EVRSettingsError *peError = nullptr ) = 0;
-		virtual void SetFloat( const char *pchSection, const char *pchSettingsKey, float flValue, EVRSettingsError *peError = nullptr ) = 0;
-		virtual void SetString( const char *pchSection, const char *pchSettingsKey, const char *pchValue, EVRSettingsError *peError = nullptr ) = 0;
+		void SetBool( const char *pchSection, const char *pchSettingsKey, bool bValue, EVRSettingsError *peError = nullptr ) { _table.SetBool(pchSection, pchSettingsKey, bValue, peError); }
+		void SetInt32( const char *pchSection, const char *pchSettingsKey, int32_t nValue, EVRSettingsError *peError = nullptr ) { _table.SetInt32(pchSection, pchSettingsKey, nValue, peError); }
+		void SetFloat( const char *pchSection, const char *pchSettingsKey, float flValue, EVRSettingsError *peError = nullptr ) { _table.SetFloat(pchSection, pchSettingsKey, flValue, peError); }
+		void SetString( const char *pchSection, const char *pchSettingsKey, const char *pchValue, EVRSettingsError *peError = nullptr ) { _table.SetString(pchSection, pchSettingsKey, pchValue, peError); }
 
 		// Users of the system need to provide a proper default in default.vrsettings in the resources/settings/ directory
 		// of either the runtime or the driver_xxx directory. Otherwise the default will be false, 0, 0.0 or ""
-		virtual bool GetBool( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError = nullptr ) = 0;
-		virtual int32_t GetInt32( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError = nullptr ) = 0;
-		virtual float GetFloat( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError = nullptr ) = 0;
-		virtual void GetString( const char *pchSection, const char *pchSettingsKey, VR_OUT_STRING() char *pchValue, uint32_t unValueLen, EVRSettingsError *peError = nullptr ) = 0;
+		bool GetBool( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError = nullptr ) { return _table.GetBool(pchSection, pchSettingsKey, peError); }
+		int32_t GetInt32( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError = nullptr ) { return _table.GetInt32(pchSection, pchSettingsKey, peError); }
+		float GetFloat( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError = nullptr ) { return _table.GetFloat(pchSection, pchSettingsKey, peError); }
+		void GetString( const char *pchSection, const char *pchSettingsKey, VR_OUT_STRING() char *pchValue, uint32_t unValueLen, EVRSettingsError *peError = nullptr ) { _table.GetString(pchSection, pchSettingsKey, pchValue, unValueLen, peError); }
 
-		virtual void RemoveSection( const char *pchSection, EVRSettingsError *peError = nullptr ) = 0;
-		virtual void RemoveKeyInSection( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError = nullptr ) = 0;
+		void RemoveSection( const char *pchSection, EVRSettingsError *peError = nullptr ) { _table.RemoveSection(pchSection, peError); }
+		void RemoveKeyInSection( const char *pchSection, const char *pchSettingsKey, EVRSettingsError *peError = nullptr ) { _table.RemoveKeyInSection(pchSection, pchSettingsKey, peError); }
 	};
 
 	//-----------------------------------------------------------------------------
-	static const char * const IVRSettings_Version = "IVRSettings_003";
+	static const char * const IVRSettings_Version = "FnTable:IVRSettings_003";
 
 	class CVRSettingHelper
 	{
@@ -3016,16 +3118,30 @@ enum ChaperoneCalibrationState
 * 0,0,0 is the preferred standing area center.
 * 0Y is the floor height.
 * -Z is the preferred forward facing direction. */
+struct VR_IVRChaperone_FnTable
+{
+	ChaperoneCalibrationState (__stdcall *GetCalibrationState)();
+	bool (__stdcall *GetPlayAreaSize)( float *pSizeX, float *pSizeZ );
+	bool (__stdcall *GetPlayAreaRect)( HmdQuad_t *rect );
+	void (__stdcall *ReloadInfo)( void );
+	void (__stdcall *SetSceneColor)( HmdColor_t color );
+	void (__stdcall *GetBoundsColor)( HmdColor_t *pOutputColorArray, int nNumOutputColors, float flCollisionBoundsFadeDistance, HmdColor_t *pOutputCameraColor );
+	bool (__stdcall *AreBoundsVisible)();
+	void (__stdcall *ForceBoundsVisible)( bool bForce );
+	void (__stdcall *ResetZeroPose)( ETrackingUniverseOrigin eTrackingUniverseOrigin );
+};
+
 class IVRChaperone
 {
+	VR_IVRChaperone_FnTable _table;
 public:
 
 	/** Get the current state of Chaperone calibration. This state can change at any time during a session due to physical base station changes. **/
-	virtual ChaperoneCalibrationState GetCalibrationState() = 0;
+	ChaperoneCalibrationState GetCalibrationState() { return _table.GetCalibrationState(); }
 
 	/** Returns the width and depth of the Play Area (formerly named Soft Bounds) in X and Z.
 	* Tracking space center (0,0,0) is the center of the Play Area. **/
-	virtual bool GetPlayAreaSize( float *pSizeX, float *pSizeZ ) = 0;
+	bool GetPlayAreaSize( float *pSizeX, float *pSizeZ ) { return _table.GetPlayAreaSize(pSizeX, pSizeZ); }
 
 	/** Returns the 4 corner positions of the Play Area (formerly named Soft Bounds).
 	* Corners are in counter-clockwise order.
@@ -3033,22 +3149,22 @@ public:
 	* It's a rectangle.
 	* 2 sides are parallel to the X axis and 2 sides are parallel to the Z axis.
 	* Height of every corner is 0Y (on the floor). **/
-	virtual bool GetPlayAreaRect( HmdQuad_t *rect ) = 0;
+	bool GetPlayAreaRect( HmdQuad_t *rect ) { return _table.GetPlayAreaRect(rect); }
 
 	/** Reload Chaperone data from the .vrchap file on disk. */
-	virtual void ReloadInfo( void ) = 0;
+	void ReloadInfo( void ) { _table.ReloadInfo(); }
 
 	/** Optionally give the chaperone system a hit about the color and brightness in the scene **/
-	virtual void SetSceneColor( HmdColor_t color ) = 0;
+	void SetSceneColor( HmdColor_t color ) { _table.SetSceneColor(color); }
 
 	/** Get the current chaperone bounds draw color and brightness **/
-	virtual void GetBoundsColor( HmdColor_t *pOutputColorArray, int nNumOutputColors, float flCollisionBoundsFadeDistance, HmdColor_t *pOutputCameraColor ) = 0;
+	void GetBoundsColor( HmdColor_t *pOutputColorArray, int nNumOutputColors, float flCollisionBoundsFadeDistance, HmdColor_t *pOutputCameraColor ) { _table.GetBoundsColor(pOutputColorArray, nNumOutputColors, flCollisionBoundsFadeDistance, pOutputCameraColor); }
 
 	/** Determine whether the bounds are showing right now **/
-	virtual bool AreBoundsVisible() = 0;
+	bool AreBoundsVisible() { return _table.AreBoundsVisible(); }
 
 	/** Force the bounds to show, mostly for utilities **/
-	virtual void ForceBoundsVisible( bool bForce ) = 0;
+	void ForceBoundsVisible( bool bForce ) { _table.ForceBoundsVisible(bForce); }
 
 	/** Sets the zero pose for the given tracker coordinate system to the current position and yaw of the HMD. After
 	* ResetZeroPose all GetDeviceToAbsoluteTrackingPose calls as the origin will be relative to this new zero pose.
@@ -3059,10 +3175,10 @@ public:
 	* NOTE: This function overrides the user's previously saved zero pose and should only be called as the result of a user action.
 	* Users are also able to set their zero pose via the OpenVR Dashboard.
 	**/
-	virtual void ResetZeroPose( ETrackingUniverseOrigin eTrackingUniverseOrigin ) = 0;
+	void ResetZeroPose( ETrackingUniverseOrigin eTrackingUniverseOrigin ) { _table.ResetZeroPose(eTrackingUniverseOrigin); }
 };
 
-static const char * const IVRChaperone_Version = "IVRChaperone_004";
+static const char * const IVRChaperone_Version = "FnTable:IVRChaperone_004";
 
 #pragma pack( pop )
 
@@ -3088,21 +3204,46 @@ enum EChaperoneImportFlags
 * live copy. Any changes made with this interface will stay in the working copy until
 * CommitWorkingCopy() is called, at which point the working copy and the live copy will be
 * the same again. */
+struct VR_IVRChaperoneSetup_FnTable
+{
+	bool (__stdcall *CommitWorkingCopy)( EChaperoneConfigFile configFile );
+	void (__stdcall *RevertWorkingCopy)();
+	bool (__stdcall *GetWorkingPlayAreaSize)( float *pSizeX, float *pSizeZ );
+	bool (__stdcall *GetWorkingPlayAreaRect)( HmdQuad_t *rect );
+	bool (__stdcall *GetWorkingCollisionBoundsInfo)(  HmdQuad_t *pQuadsBuffer, uint32_t* punQuadsCount );
+	bool (__stdcall *GetLiveCollisionBoundsInfo)(  HmdQuad_t *pQuadsBuffer, uint32_t* punQuadsCount );
+	bool (__stdcall *GetWorkingSeatedZeroPoseToRawTrackingPose)( HmdMatrix34_t *pmatSeatedZeroPoseToRawTrackingPose );
+	bool (__stdcall *GetWorkingStandingZeroPoseToRawTrackingPose)( HmdMatrix34_t *pmatStandingZeroPoseToRawTrackingPose );
+	void (__stdcall *SetWorkingPlayAreaSize)( float sizeX, float sizeZ );
+	void (__stdcall *SetWorkingCollisionBoundsInfo)(  HmdQuad_t *pQuadsBuffer, uint32_t unQuadsCount );
+	void (__stdcall *SetWorkingPerimeter)(  HmdVector2_t *pPointBuffer, uint32_t unPointCount );
+	void (__stdcall *SetWorkingSeatedZeroPoseToRawTrackingPose)( const HmdMatrix34_t *pMatSeatedZeroPoseToRawTrackingPose );
+	void (__stdcall *SetWorkingStandingZeroPoseToRawTrackingPose)( const HmdMatrix34_t *pMatStandingZeroPoseToRawTrackingPose );
+	void (__stdcall *ReloadFromDisk)( EChaperoneConfigFile configFile );
+	bool (__stdcall *GetLiveSeatedZeroPoseToRawTrackingPose)( HmdMatrix34_t *pmatSeatedZeroPoseToRawTrackingPose );
+	bool (__stdcall *ExportLiveToBuffer)(  char *pBuffer, uint32_t *pnBufferLength );
+	bool (__stdcall *ImportFromBufferToWorking)( const char *pBuffer, uint32_t nImportFlags );
+	void (__stdcall *ShowWorkingSetPreview)();
+	void (__stdcall *HideWorkingSetPreview)();
+	void (__stdcall *RoomSetupStarting)();
+};
+
 class IVRChaperoneSetup
 {
+	VR_IVRChaperoneSetup_FnTable _table;
 public:
 
 	/** Saves the current working copy to disk */
-	virtual bool CommitWorkingCopy( EChaperoneConfigFile configFile ) = 0;
+	bool CommitWorkingCopy( EChaperoneConfigFile configFile ) { return _table.CommitWorkingCopy(configFile); }
 
 	/** Reverts the working copy to match the live chaperone calibration.
 	* To modify existing data this MUST be do WHILE getting a non-error ChaperoneCalibrationStatus.
 	* Only after this should you do gets and sets on the existing data. */
-	virtual void RevertWorkingCopy() = 0;
+	void RevertWorkingCopy() { _table.RevertWorkingCopy(); }
 
 	/** Returns the width and depth of the Play Area (formerly named Soft Bounds) in X and Z from the working copy.
 	* Tracking space center (0,0,0) is the center of the Play Area. */
-	virtual bool GetWorkingPlayAreaSize( float *pSizeX, float *pSizeZ ) = 0;
+	bool GetWorkingPlayAreaSize( float *pSizeX, float *pSizeZ ) { return _table.GetWorkingPlayAreaSize(pSizeX, pSizeZ); }
 
 	/** Returns the 4 corner positions of the Play Area (formerly named Soft Bounds) from the working copy.
 	* Corners are in clockwise order.
@@ -3110,59 +3251,59 @@ public:
 	* It's a rectangle.
 	* 2 sides are parallel to the X axis and 2 sides are parallel to the Z axis.
 	* Height of every corner is 0Y (on the floor). **/
-	virtual bool GetWorkingPlayAreaRect( HmdQuad_t *rect ) = 0;
+	bool GetWorkingPlayAreaRect( HmdQuad_t *rect ) { return _table.GetWorkingPlayAreaRect(rect); }
 
 	/** Returns the number of Quads if the buffer points to null. Otherwise it returns Quads
 	* into the buffer up to the max specified from the working copy. */
-	virtual bool GetWorkingCollisionBoundsInfo( VR_OUT_ARRAY_COUNT(punQuadsCount) HmdQuad_t *pQuadsBuffer, uint32_t* punQuadsCount ) = 0;
+	bool GetWorkingCollisionBoundsInfo( VR_OUT_ARRAY_COUNT(punQuadsCount) HmdQuad_t *pQuadsBuffer, uint32_t* punQuadsCount ) { return _table.GetWorkingCollisionBoundsInfo(pQuadsBuffer, punQuadsCount); }
 
 	/** Returns the number of Quads if the buffer points to null. Otherwise it returns Quads
 	* into the buffer up to the max specified. */
-	virtual bool GetLiveCollisionBoundsInfo( VR_OUT_ARRAY_COUNT(punQuadsCount) HmdQuad_t *pQuadsBuffer, uint32_t* punQuadsCount ) = 0;
+	bool GetLiveCollisionBoundsInfo( VR_OUT_ARRAY_COUNT(punQuadsCount) HmdQuad_t *pQuadsBuffer, uint32_t* punQuadsCount ) { return _table.GetLiveCollisionBoundsInfo(pQuadsBuffer, punQuadsCount); }
 
 	/** Returns the preferred seated position from the working copy. */
-	virtual bool GetWorkingSeatedZeroPoseToRawTrackingPose( HmdMatrix34_t *pmatSeatedZeroPoseToRawTrackingPose ) = 0;
+	bool GetWorkingSeatedZeroPoseToRawTrackingPose( HmdMatrix34_t *pmatSeatedZeroPoseToRawTrackingPose ) { return _table.GetWorkingSeatedZeroPoseToRawTrackingPose(pmatSeatedZeroPoseToRawTrackingPose); }
 
 	/** Returns the standing origin from the working copy. */
-	virtual bool GetWorkingStandingZeroPoseToRawTrackingPose( HmdMatrix34_t *pmatStandingZeroPoseToRawTrackingPose ) = 0;
+	bool GetWorkingStandingZeroPoseToRawTrackingPose( HmdMatrix34_t *pmatStandingZeroPoseToRawTrackingPose ) { return _table.GetWorkingStandingZeroPoseToRawTrackingPose(pmatStandingZeroPoseToRawTrackingPose); }
 
 	/** Sets the Play Area in the working copy. */
-	virtual void SetWorkingPlayAreaSize( float sizeX, float sizeZ ) = 0;
+	void SetWorkingPlayAreaSize( float sizeX, float sizeZ ) { _table.SetWorkingPlayAreaSize(sizeX, sizeZ); }
 
 	/** Sets the Collision Bounds in the working copy. Note: ceiling height is ignored. */
-	virtual void SetWorkingCollisionBoundsInfo( VR_ARRAY_COUNT(unQuadsCount) HmdQuad_t *pQuadsBuffer, uint32_t unQuadsCount ) = 0;
+	void SetWorkingCollisionBoundsInfo( VR_ARRAY_COUNT(unQuadsCount) HmdQuad_t *pQuadsBuffer, uint32_t unQuadsCount ) { _table.SetWorkingCollisionBoundsInfo(pQuadsBuffer, unQuadsCount); }
 
 	/** Sets the Collision Bounds in the working copy. */
-	virtual void SetWorkingPerimeter( VR_ARRAY_COUNT( unPointCount ) HmdVector2_t *pPointBuffer, uint32_t unPointCount ) = 0;
+	void SetWorkingPerimeter( VR_ARRAY_COUNT( unPointCount ) HmdVector2_t *pPointBuffer, uint32_t unPointCount ) { _table.SetWorkingPerimeter(pPointBuffer, unPointCount); }
 
 	/** Sets the preferred seated position in the working copy. */
-	virtual void SetWorkingSeatedZeroPoseToRawTrackingPose( const HmdMatrix34_t *pMatSeatedZeroPoseToRawTrackingPose ) = 0;
+	void SetWorkingSeatedZeroPoseToRawTrackingPose( const HmdMatrix34_t *pMatSeatedZeroPoseToRawTrackingPose ) { _table.SetWorkingSeatedZeroPoseToRawTrackingPose(pMatSeatedZeroPoseToRawTrackingPose); }
 
 	/** Sets the preferred standing position in the working copy. */
-	virtual void SetWorkingStandingZeroPoseToRawTrackingPose( const HmdMatrix34_t *pMatStandingZeroPoseToRawTrackingPose ) = 0;
+	void SetWorkingStandingZeroPoseToRawTrackingPose( const HmdMatrix34_t *pMatStandingZeroPoseToRawTrackingPose ) { _table.SetWorkingStandingZeroPoseToRawTrackingPose(pMatStandingZeroPoseToRawTrackingPose); }
 
 	/** Tear everything down and reload it from the file on disk */
-	virtual void ReloadFromDisk( EChaperoneConfigFile configFile ) = 0;
+	void ReloadFromDisk( EChaperoneConfigFile configFile ) { _table.ReloadFromDisk(configFile); }
 
 	/** Returns the preferred seated position. */
-	virtual bool GetLiveSeatedZeroPoseToRawTrackingPose( HmdMatrix34_t *pmatSeatedZeroPoseToRawTrackingPose ) = 0;
+	bool GetLiveSeatedZeroPoseToRawTrackingPose( HmdMatrix34_t *pmatSeatedZeroPoseToRawTrackingPose ) { return _table.GetLiveSeatedZeroPoseToRawTrackingPose(pmatSeatedZeroPoseToRawTrackingPose); }
 
-	virtual bool ExportLiveToBuffer( VR_OUT_STRING() char *pBuffer, uint32_t *pnBufferLength ) = 0;
-	virtual bool ImportFromBufferToWorking( const char *pBuffer, uint32_t nImportFlags ) = 0;
+	bool ExportLiveToBuffer( VR_OUT_STRING() char *pBuffer, uint32_t *pnBufferLength ) { return _table.ExportLiveToBuffer(pBuffer, pnBufferLength); }
+	bool ImportFromBufferToWorking( const char *pBuffer, uint32_t nImportFlags ) { return _table.ImportFromBufferToWorking(pBuffer, nImportFlags); }
 
 	/** Shows the chaperone data in the working set to preview in the compositor.*/
-	virtual void ShowWorkingSetPreview() = 0;
+	void ShowWorkingSetPreview() { _table.ShowWorkingSetPreview(); }
 
 	/** Hides the chaperone data in the working set to preview in the compositor (if it was visible).*/
-	virtual void HideWorkingSetPreview() = 0;
+	void HideWorkingSetPreview() { _table.HideWorkingSetPreview(); }
 
 	/** Fire an event that the tracking system can use to know room setup is about to begin. This lets the tracking
 	 * system make any last minute adjustments that should be incorporated into the new setup.  If the user is adjusting
 	 * live in HMD using a tweak tool, keep in mind that calling this might cause the user to see the room jump. */
-	virtual void RoomSetupStarting() = 0;
+	void RoomSetupStarting() { _table.RoomSetupStarting(); }
 };
 
-static const char * const IVRChaperoneSetup_Version = "IVRChaperoneSetup_006";
+static const char * const IVRChaperoneSetup_Version = "FnTable:IVRChaperoneSetup_006";
 
 
 }
@@ -3279,14 +3420,73 @@ static inline Compositor_StageRenderSettings DefaultStageRenderSettings()
 #pragma pack( pop )
 
 /** Allows the application to interact with the compositor */
+struct VR_IVRCompositor_FnTable
+{
+	void (__stdcall *SetTrackingSpace)( ETrackingUniverseOrigin eOrigin );
+	ETrackingUniverseOrigin (__stdcall *GetTrackingSpace)();
+	EVRCompositorError (__stdcall *WaitGetPoses)(  TrackedDevicePose_t* pRenderPoseArray, uint32_t unRenderPoseArrayCount,
+		 TrackedDevicePose_t* pGamePoseArray, uint32_t unGamePoseArrayCount );
+	EVRCompositorError (__stdcall *GetLastPoses)(  TrackedDevicePose_t* pRenderPoseArray, uint32_t unRenderPoseArrayCount,
+		 TrackedDevicePose_t* pGamePoseArray, uint32_t unGamePoseArrayCount );
+	EVRCompositorError (__stdcall *GetLastPoseForTrackedDeviceIndex)( TrackedDeviceIndex_t unDeviceIndex, TrackedDevicePose_t *pOutputPose, TrackedDevicePose_t *pOutputGamePose );
+	EVRCompositorError (__stdcall *Submit)( EVREye eEye, const Texture_t *pTexture, const VRTextureBounds_t* pBounds, EVRSubmitFlags nSubmitFlags);
+	void (__stdcall *ClearLastSubmittedFrame)();
+	void (__stdcall *PostPresentHandoff)();
+	bool (__stdcall *GetFrameTiming)( Compositor_FrameTiming *pTiming, uint32_t unFramesAgo);
+	uint32_t (__stdcall *GetFrameTimings)(  Compositor_FrameTiming *pTiming, uint32_t nFrames );
+	float (__stdcall *GetFrameTimeRemaining)();
+	void (__stdcall *GetCumulativeStats)( Compositor_CumulativeStats *pStats, uint32_t nStatsSizeInBytes );
+	void (__stdcall *FadeToColor)( float fSeconds, float fRed, float fGreen, float fBlue, float fAlpha, bool bBackground);
+	HmdColor_t (__stdcall *GetCurrentFadeColor)( bool bBackground);
+	void (__stdcall *FadeGrid)( float fSeconds, bool bFadeGridIn );
+	float (__stdcall *GetCurrentGridAlpha)();
+	EVRCompositorError (__stdcall *SetSkyboxOverride)(  const Texture_t *pTextures, uint32_t unTextureCount );
+	void (__stdcall *ClearSkyboxOverride)();
+	void (__stdcall *CompositorBringToFront)();
+	void (__stdcall *CompositorGoToBack)();
+	void (__stdcall *CompositorQuit)();
+	bool (__stdcall *IsFullscreen)();
+	uint32_t (__stdcall *GetCurrentSceneFocusProcess)();
+	uint32_t (__stdcall *GetLastFrameRenderer)();
+	bool (__stdcall *CanRenderScene)();
+	void (__stdcall *ShowMirrorWindow)();
+	void (__stdcall *HideMirrorWindow)();
+	bool (__stdcall *IsMirrorWindowVisible)();
+	void (__stdcall *CompositorDumpImages)();
+	bool (__stdcall *ShouldAppRenderWithLowResources)();
+	void (__stdcall *ForceInterleavedReprojectionOn)( bool bOverride );
+	void (__stdcall *ForceReconnectProcess)();
+	void (__stdcall *SuspendRendering)( bool bSuspend );
+	vr::EVRCompositorError (__stdcall *GetMirrorTextureD3D11)( vr::EVREye eEye, void *pD3D11DeviceOrResource, void **ppD3D11ShaderResourceView );
+	void (__stdcall *ReleaseMirrorTextureD3D11)( void *pD3D11ShaderResourceView );
+	vr::EVRCompositorError (__stdcall *GetMirrorTextureGL)( vr::EVREye eEye, vr::glUInt_t *pglTextureId, vr::glSharedTextureHandle_t *pglSharedTextureHandle );
+	bool (__stdcall *ReleaseSharedGLTexture)( vr::glUInt_t glTextureId, vr::glSharedTextureHandle_t glSharedTextureHandle );
+	void (__stdcall *LockGLSharedTextureForAccess)( vr::glSharedTextureHandle_t glSharedTextureHandle );
+	void (__stdcall *UnlockGLSharedTextureForAccess)( vr::glSharedTextureHandle_t glSharedTextureHandle );
+	uint32_t (__stdcall *GetVulkanInstanceExtensionsRequired)(  char *pchValue, uint32_t unBufferSize );
+	uint32_t (__stdcall *GetVulkanDeviceExtensionsRequired)( VkPhysicalDevice_T *pPhysicalDevice,  char *pchValue, uint32_t unBufferSize );
+	void (__stdcall *SetExplicitTimingMode)( EVRCompositorTimingMode eTimingMode );
+	EVRCompositorError (__stdcall *SubmitExplicitTimingData)();
+	bool (__stdcall *IsMotionSmoothingEnabled)();
+	bool (__stdcall *IsMotionSmoothingSupported)();
+	bool (__stdcall *IsCurrentSceneFocusAppLoading)();
+	EVRCompositorError (__stdcall *SetStageOverride_Async)( const char *pchRenderModelPath, const HmdMatrix34_t *pTransform,
+		const Compositor_StageRenderSettings *pRenderSettings, uint32_t nSizeOfRenderSettings);
+	void (__stdcall *ClearStageOverride)();
+	bool (__stdcall *GetCompositorBenchmarkResults)( Compositor_BenchmarkResults *pBenchmarkResults, uint32_t nSizeOfBenchmarkResults );
+	EVRCompositorError (__stdcall *GetLastPosePredictionIDs)( uint32_t *pRenderPosePredictionID, uint32_t *pGamePosePredictionID );
+	EVRCompositorError (__stdcall *GetPosesForFrame)( uint32_t unPosePredictionID,  TrackedDevicePose_t* pPoseArray, uint32_t unPoseArrayCount );
+};
+
 class IVRCompositor
 {
+	VR_IVRCompositor_FnTable _table;
 public:
 	/** Sets tracking space returned by WaitGetPoses */
-	virtual void SetTrackingSpace( ETrackingUniverseOrigin eOrigin ) = 0;
+	void SetTrackingSpace( ETrackingUniverseOrigin eOrigin ) { _table.SetTrackingSpace(eOrigin); }
 
 	/** Gets current tracking space returned by WaitGetPoses */
-	virtual ETrackingUniverseOrigin GetTrackingSpace() = 0;
+	ETrackingUniverseOrigin GetTrackingSpace() { return _table.GetTrackingSpace(); }
 
 	/** Scene applications should call this function to get poses to render with (and optionally poses predicted an additional frame out to use for gameplay).
 	* This function will block until "running start" milliseconds before the start of the frame, and should be called at the last moment before needing to
@@ -3296,17 +3496,17 @@ public:
 	*	- IsNotSceneApplication (make sure to call VR_Init with VRApplicaiton_Scene)
 	*	- DoNotHaveFocus (some other app has taken focus - this will throttle the call to 10hz to reduce the impact on that app)
 	*/
-	virtual EVRCompositorError WaitGetPoses( VR_ARRAY_COUNT( unRenderPoseArrayCount ) TrackedDevicePose_t* pRenderPoseArray, uint32_t unRenderPoseArrayCount,
-		VR_ARRAY_COUNT( unGamePoseArrayCount ) TrackedDevicePose_t* pGamePoseArray, uint32_t unGamePoseArrayCount ) = 0;
+	EVRCompositorError WaitGetPoses( VR_ARRAY_COUNT( unRenderPoseArrayCount ) TrackedDevicePose_t* pRenderPoseArray, uint32_t unRenderPoseArrayCount,
+		VR_ARRAY_COUNT( unGamePoseArrayCount ) TrackedDevicePose_t* pGamePoseArray, uint32_t unGamePoseArrayCount ) { return _table.WaitGetPoses(pRenderPoseArray, unRenderPoseArrayCount, pGamePoseArray, unGamePoseArrayCount); }
 
 	/** Get the last set of poses returned by WaitGetPoses. */
-	virtual EVRCompositorError GetLastPoses( VR_ARRAY_COUNT( unRenderPoseArrayCount ) TrackedDevicePose_t* pRenderPoseArray, uint32_t unRenderPoseArrayCount,
-		VR_ARRAY_COUNT( unGamePoseArrayCount ) TrackedDevicePose_t* pGamePoseArray, uint32_t unGamePoseArrayCount ) = 0;
+	EVRCompositorError GetLastPoses( VR_ARRAY_COUNT( unRenderPoseArrayCount ) TrackedDevicePose_t* pRenderPoseArray, uint32_t unRenderPoseArrayCount,
+		VR_ARRAY_COUNT( unGamePoseArrayCount ) TrackedDevicePose_t* pGamePoseArray, uint32_t unGamePoseArrayCount ) { return _table.GetLastPoses(pRenderPoseArray, unRenderPoseArrayCount, pGamePoseArray, unGamePoseArrayCount); }
 
 	/** Interface for accessing last set of poses returned by WaitGetPoses one at a time.
 	* Returns VRCompositorError_IndexOutOfRange if unDeviceIndex not less than k_unMaxTrackedDeviceCount otherwise VRCompositorError_None.
 	* It is okay to pass NULL for either pose if you only want one of the values. */
-	virtual EVRCompositorError GetLastPoseForTrackedDeviceIndex( TrackedDeviceIndex_t unDeviceIndex, TrackedDevicePose_t *pOutputPose, TrackedDevicePose_t *pOutputGamePose ) = 0;
+	EVRCompositorError GetLastPoseForTrackedDeviceIndex( TrackedDeviceIndex_t unDeviceIndex, TrackedDevicePose_t *pOutputPose, TrackedDevicePose_t *pOutputGamePose ) { return _table.GetLastPoseForTrackedDeviceIndex(unDeviceIndex, pOutputPose, pOutputGamePose); }
 
 	/** Updated scene texture to display. If pBounds is NULL the entire texture will be used.  If called from an OpenGL app, consider adding a glFlush after
 	* Submitting both frames to signal the driver to start processing, otherwise it may wait until the command buffer fills up, causing the app to miss frames.
@@ -3323,125 +3523,125 @@ public:
 	*	- InvalidTexture (usually means bad arguments passed in)
 	*	- AlreadySubmitted (app has submitted two left textures or two right textures in a single frame - i.e. before calling WaitGetPoses again)
 	*/
-	virtual EVRCompositorError Submit( EVREye eEye, const Texture_t *pTexture, const VRTextureBounds_t* pBounds = 0, EVRSubmitFlags nSubmitFlags = Submit_Default ) = 0;
+	EVRCompositorError Submit( EVREye eEye, const Texture_t *pTexture, const VRTextureBounds_t* pBounds = 0, EVRSubmitFlags nSubmitFlags = Submit_Default ) { return _table.Submit(eEye, pTexture, pBounds, nSubmitFlags); }
 
 	/** Clears the frame that was sent with the last call to Submit. This will cause the
 	* compositor to show the grid until Submit is called again. */
-	virtual void ClearLastSubmittedFrame() = 0;
+	void ClearLastSubmittedFrame() { _table.ClearLastSubmittedFrame(); }
 
 	/** Call immediately after presenting your app's window (i.e. companion window) to unblock the compositor.
 	* This is an optional call, which only needs to be used if you can't instead call WaitGetPoses immediately after Present.
 	* For example, if your engine's render and game loop are not on separate threads, or blocking the render thread until 3ms before the next vsync would
 	* introduce a deadlock of some sort.  This function tells the compositor that you have finished all rendering after having Submitted buffers for both
 	* eyes, and it is free to start its rendering work.  This should only be called from the same thread you are rendering on. */
-	virtual void PostPresentHandoff() = 0;
+	void PostPresentHandoff() { _table.PostPresentHandoff(); }
 
 	/** Returns true if timing data is filled it.  Sets oldest timing info if nFramesAgo is larger than the stored history.
 	* Be sure to set timing.size = sizeof(Compositor_FrameTiming) on struct passed in before calling this function. */
-	virtual bool GetFrameTiming( Compositor_FrameTiming *pTiming, uint32_t unFramesAgo = 0 ) = 0;
+	bool GetFrameTiming( Compositor_FrameTiming *pTiming, uint32_t unFramesAgo = 0 ) { return _table.GetFrameTiming(pTiming, unFramesAgo); }
 
 	/** Interface for copying a range of timing data.  Frames are returned in ascending order (oldest to newest) with the last being the most recent frame.
 	* Only the first entry's m_nSize needs to be set, as the rest will be inferred from that.  Returns total number of entries filled out. */
-	virtual uint32_t GetFrameTimings( VR_ARRAY_COUNT( nFrames ) Compositor_FrameTiming *pTiming, uint32_t nFrames ) = 0;
+	uint32_t GetFrameTimings( VR_ARRAY_COUNT( nFrames ) Compositor_FrameTiming *pTiming, uint32_t nFrames ) { return _table.GetFrameTimings(pTiming, nFrames); }
 
 	/** Returns the time in seconds left in the current (as identified by FrameTiming's frameIndex) frame.
 	* Due to "running start", this value may roll over to the next frame before ever reaching 0.0. */
-	virtual float GetFrameTimeRemaining() = 0;
+	float GetFrameTimeRemaining() { return _table.GetFrameTimeRemaining(); }
 
 	/** Fills out stats accumulated for the last connected application.  Pass in sizeof( Compositor_CumulativeStats ) as second parameter. */
-	virtual void GetCumulativeStats( Compositor_CumulativeStats *pStats, uint32_t nStatsSizeInBytes ) = 0;
+	void GetCumulativeStats( Compositor_CumulativeStats *pStats, uint32_t nStatsSizeInBytes ) { _table.GetCumulativeStats(pStats, nStatsSizeInBytes); }
 
 	/** Fades the view on the HMD to the specified color. The fade will take fSeconds, and the color values are between
 	* 0.0 and 1.0. This color is faded on top of the scene based on the alpha parameter. Removing the fade color instantly
 	* would be FadeToColor( 0.0, 0.0, 0.0, 0.0, 0.0 ).  Values are in un-premultiplied alpha space. */
-	virtual void FadeToColor( float fSeconds, float fRed, float fGreen, float fBlue, float fAlpha, bool bBackground = false ) = 0;
+	void FadeToColor( float fSeconds, float fRed, float fGreen, float fBlue, float fAlpha, bool bBackground = false ) { _table.FadeToColor(fSeconds, fRed, fGreen, fBlue, fAlpha, bBackground); }
 
 	/** Get current fade color value. */
-	virtual HmdColor_t GetCurrentFadeColor( bool bBackground = false ) = 0;
+	HmdColor_t GetCurrentFadeColor( bool bBackground = false ) { return _table.GetCurrentFadeColor(bBackground); }
 
 	/** Fading the Grid in or out in fSeconds */
-	virtual void FadeGrid( float fSeconds, bool bFadeGridIn ) = 0;
+	void FadeGrid( float fSeconds, bool bFadeGridIn ) { _table.FadeGrid(fSeconds, bFadeGridIn); }
 
 	/** Get current alpha value of grid. */
-	virtual float GetCurrentGridAlpha() = 0;
+	float GetCurrentGridAlpha() { return _table.GetCurrentGridAlpha(); }
 
 	/** Override the skybox used in the compositor (e.g. for during level loads when the app can't feed scene images fast enough)
 	* Order is Front, Back, Left, Right, Top, Bottom.  If only a single texture is passed, it is assumed in lat-long format.
 	* If two are passed, it is assumed a lat-long stereo pair. */
-	virtual EVRCompositorError SetSkyboxOverride( VR_ARRAY_COUNT( unTextureCount ) const Texture_t *pTextures, uint32_t unTextureCount ) = 0;
+	EVRCompositorError SetSkyboxOverride( VR_ARRAY_COUNT( unTextureCount ) const Texture_t *pTextures, uint32_t unTextureCount ) { return _table.SetSkyboxOverride(pTextures, unTextureCount); }
 
 	/** Resets compositor skybox back to defaults. */
-	virtual void ClearSkyboxOverride() = 0;
+	void ClearSkyboxOverride() { _table.ClearSkyboxOverride(); }
 
 	/** Brings the compositor window to the front. This is useful for covering any other window that may be on the HMD
 	* and is obscuring the compositor window. */
-	virtual void CompositorBringToFront() = 0;
+	void CompositorBringToFront() { _table.CompositorBringToFront(); }
 
 	/** Pushes the compositor window to the back. This is useful for allowing other applications to draw directly to the HMD. */
-	virtual void CompositorGoToBack() = 0;
+	void CompositorGoToBack() { _table.CompositorGoToBack(); }
 
 	/** DEPRECATED: Tells the compositor process to clean up and exit. You do not need to call this function at shutdown.
 	* Under normal circumstances the compositor will manage its own life cycle based on what applications are running. */
-	virtual void CompositorQuit() = 0;
+	void CompositorQuit() { _table.CompositorQuit(); }
 
 	/** Return whether the compositor is fullscreen */
-	virtual bool IsFullscreen() = 0;
+	bool IsFullscreen() { return _table.IsFullscreen(); }
 
 	/** Returns the process ID of the process that is currently rendering the scene */
-	virtual uint32_t GetCurrentSceneFocusProcess() = 0;
+	uint32_t GetCurrentSceneFocusProcess() { return _table.GetCurrentSceneFocusProcess(); }
 
 	/** Returns the process ID of the process that rendered the last frame (or 0 if the compositor itself rendered the frame.)
 	* Returns 0 when fading out from an app and the app's process Id when fading into an app. */
-	virtual uint32_t GetLastFrameRenderer() = 0;
+	uint32_t GetLastFrameRenderer() { return _table.GetLastFrameRenderer(); }
 
 	/** Returns true if the current process has the scene focus */
-	virtual bool CanRenderScene() = 0;
+	bool CanRenderScene() { return _table.CanRenderScene(); }
 
 	/** DEPRECATED: Opens the headset view (as either a window or docked widget depending on user's preferences) that displays what the user
 	* sees in the headset. */
-	virtual void ShowMirrorWindow() = 0;
+	void ShowMirrorWindow() { _table.ShowMirrorWindow(); }
 
 	/** DEPRECATED: Closes the headset view, either as a window or docked widget. */
-	virtual void HideMirrorWindow() = 0;
+	void HideMirrorWindow() { _table.HideMirrorWindow(); }
 
 	/** DEPRECATED: Returns true if the headset view (either as a window or docked widget) is shown. */
-	virtual bool IsMirrorWindowVisible() = 0;
+	bool IsMirrorWindowVisible() { return _table.IsMirrorWindowVisible(); }
 
 	/** Writes back buffer and stereo left/right pair from the application to a 'screenshots' folder in the SteamVR runtime root. */
-	virtual void CompositorDumpImages() = 0;
+	void CompositorDumpImages() { _table.CompositorDumpImages(); }
 
 	/** Let an app know it should be rendering with low resources. */
-	virtual bool ShouldAppRenderWithLowResources() = 0;
+	bool ShouldAppRenderWithLowResources() { return _table.ShouldAppRenderWithLowResources(); }
 
 	/** Override interleaved reprojection logic to force on. */
-	virtual void ForceInterleavedReprojectionOn( bool bOverride ) = 0;
+	void ForceInterleavedReprojectionOn( bool bOverride ) { _table.ForceInterleavedReprojectionOn(bOverride); }
 
 	/** Force reconnecting to the compositor process. */
-	virtual void ForceReconnectProcess() = 0;
+	void ForceReconnectProcess() { _table.ForceReconnectProcess(); }
 
 	/** Temporarily suspends rendering (useful for finer control over scene transitions). */
-	virtual void SuspendRendering( bool bSuspend ) = 0;
+	void SuspendRendering( bool bSuspend ) { _table.SuspendRendering(bSuspend); }
 
 	/** Opens a shared D3D11 texture with the undistorted composited image for each eye.  Use ReleaseMirrorTextureD3D11 when finished
 	* instead of calling Release on the resource itself. */
-	virtual vr::EVRCompositorError GetMirrorTextureD3D11( vr::EVREye eEye, void *pD3D11DeviceOrResource, void **ppD3D11ShaderResourceView ) = 0;
-	virtual void ReleaseMirrorTextureD3D11( void *pD3D11ShaderResourceView ) = 0;
+	vr::EVRCompositorError GetMirrorTextureD3D11( vr::EVREye eEye, void *pD3D11DeviceOrResource, void **ppD3D11ShaderResourceView ) { return _table.GetMirrorTextureD3D11(eEye, pD3D11DeviceOrResource, ppD3D11ShaderResourceView); }
+	void ReleaseMirrorTextureD3D11( void *pD3D11ShaderResourceView ) { _table.ReleaseMirrorTextureD3D11(pD3D11ShaderResourceView); }
 
 	/** Access to mirror textures from OpenGL. */
-	virtual vr::EVRCompositorError GetMirrorTextureGL( vr::EVREye eEye, vr::glUInt_t *pglTextureId, vr::glSharedTextureHandle_t *pglSharedTextureHandle ) = 0;
-	virtual bool ReleaseSharedGLTexture( vr::glUInt_t glTextureId, vr::glSharedTextureHandle_t glSharedTextureHandle ) = 0;
-	virtual void LockGLSharedTextureForAccess( vr::glSharedTextureHandle_t glSharedTextureHandle ) = 0;
-	virtual void UnlockGLSharedTextureForAccess( vr::glSharedTextureHandle_t glSharedTextureHandle ) = 0;
+	vr::EVRCompositorError GetMirrorTextureGL( vr::EVREye eEye, vr::glUInt_t *pglTextureId, vr::glSharedTextureHandle_t *pglSharedTextureHandle ) { return _table.GetMirrorTextureGL(eEye, pglTextureId, pglSharedTextureHandle); }
+	bool ReleaseSharedGLTexture( vr::glUInt_t glTextureId, vr::glSharedTextureHandle_t glSharedTextureHandle ) { return _table.ReleaseSharedGLTexture(glTextureId, glSharedTextureHandle); }
+	void LockGLSharedTextureForAccess( vr::glSharedTextureHandle_t glSharedTextureHandle ) { _table.LockGLSharedTextureForAccess(glSharedTextureHandle); }
+	void UnlockGLSharedTextureForAccess( vr::glSharedTextureHandle_t glSharedTextureHandle ) { _table.UnlockGLSharedTextureForAccess(glSharedTextureHandle); }
 
 	/** [Vulkan Only]
 	* return 0. Otherwise it returns the length of the number of bytes necessary to hold this string including the trailing
 	* null.  The string will be a space separated list of-required instance extensions to enable in VkCreateInstance */
-	virtual uint32_t GetVulkanInstanceExtensionsRequired( VR_OUT_STRING() char *pchValue, uint32_t unBufferSize ) = 0;
+	uint32_t GetVulkanInstanceExtensionsRequired( VR_OUT_STRING() char *pchValue, uint32_t unBufferSize ) { return _table.GetVulkanInstanceExtensionsRequired(pchValue, unBufferSize); }
 
 	/** [Vulkan only]
 	* return 0. Otherwise it returns the length of the number of bytes necessary to hold this string including the trailing
 	* null.  The string will be a space separated list of required device extensions to enable in VkCreateDevice */
-	virtual uint32_t GetVulkanDeviceExtensionsRequired( VkPhysicalDevice_T *pPhysicalDevice, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize ) = 0;
+	uint32_t GetVulkanDeviceExtensionsRequired( VkPhysicalDevice_T *pPhysicalDevice, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize ) { return _table.GetVulkanDeviceExtensionsRequired(pPhysicalDevice, pchValue, unBufferSize); }
 
 	/** [ Vulkan/D3D12 Only ]
 	* There are two purposes for SetExplicitTimingMode:
@@ -3461,7 +3661,7 @@ public:
 	* itself. If these conditions are met, then WaitGetPoses is guaranteed not to access the queue.  Note that PostPresentHandoff
 	* and SubmitExplicitTimingData will access the queue, so only WaitGetPoses becomes safe for accessing the queue from another
 	* thread. */
-	virtual void SetExplicitTimingMode( EVRCompositorTimingMode eTimingMode ) = 0;
+	void SetExplicitTimingMode( EVRCompositorTimingMode eTimingMode ) { _table.SetExplicitTimingMode(eTimingMode); }
 
 	/** [ Vulkan/D3D12 Only ]
 	* Submit explicit timing data.  When SetExplicitTimingMode is true, this must be called immediately before
@@ -3469,41 +3669,41 @@ public:
 	* This function will insert a GPU timestamp write just before the application starts its rendering.  This function
 	* will perform a vkQueueSubmit on Vulkan so must not be done simultaneously with VkQueue operations on another thread.
 	* Returns VRCompositorError_RequestFailed if SetExplicitTimingMode is not enabled. */
-	virtual EVRCompositorError SubmitExplicitTimingData() = 0;
+	EVRCompositorError SubmitExplicitTimingData() { return _table.SubmitExplicitTimingData(); }
 
 	/** Indicates whether or not motion smoothing is enabled by the user settings.
 	* If you want to know if motion smoothing actually triggered due to a late frame, check Compositor_FrameTiming
 	* m_nReprojectionFlags & VRCompositor_ReprojectionMotion instead. */
-	virtual bool IsMotionSmoothingEnabled() = 0;
+	bool IsMotionSmoothingEnabled() { return _table.IsMotionSmoothingEnabled(); }
 
 	/** Indicates whether or not motion smoothing is supported by the current hardware. */
-	virtual bool IsMotionSmoothingSupported() = 0;
+	bool IsMotionSmoothingSupported() { return _table.IsMotionSmoothingSupported(); }
 
 	/** Indicates whether or not the current scene focus app is currently loading.  This is inferred from its use of FadeGrid to
 	* explicitly fade to the compositor to cover up the fact that it cannot render at a sustained full framerate during this time. */
-	virtual bool IsCurrentSceneFocusAppLoading() = 0;
+	bool IsCurrentSceneFocusAppLoading() { return _table.IsCurrentSceneFocusAppLoading(); }
 
 	/** Override the stage model used in the compositor to replace the grid.  RenderModelPath is a full path the an OBJ file to load.
 	* This file will be loaded asynchronously from disk and uploaded to the gpu by the runtime.  Once ready for rendering, the
 	* VREvent StageOverrideReady will be sent.  Use FadeToGrid to reveal.  Call ClearStageOverride to free the associated resources when finished. */
-	virtual EVRCompositorError SetStageOverride_Async( const char *pchRenderModelPath, const HmdMatrix34_t *pTransform = 0,
-		const Compositor_StageRenderSettings *pRenderSettings = 0, uint32_t nSizeOfRenderSettings = 0 ) = 0;
+	EVRCompositorError SetStageOverride_Async( const char *pchRenderModelPath, const HmdMatrix34_t *pTransform = 0,
+		const Compositor_StageRenderSettings *pRenderSettings = 0, uint32_t nSizeOfRenderSettings = 0 ) { return _table.SetStageOverride_Async(pchRenderModelPath, pTransform, pRenderSettings, nSizeOfRenderSettings); }
 
 	/** Resets the stage to its default user specified setting. */
-	virtual void ClearStageOverride() = 0;
+	void ClearStageOverride() { _table.ClearStageOverride(); }
 
 	/** Returns true if pBenchmarkResults is filled it.  Sets pBenchmarkResults with the result of the compositor benchmark.
 	* nSizeOfBenchmarkResults should be set to sizeof(Compositor_BenchmarkResults) */
-	virtual bool GetCompositorBenchmarkResults( Compositor_BenchmarkResults *pBenchmarkResults, uint32_t nSizeOfBenchmarkResults ) = 0;
+	bool GetCompositorBenchmarkResults( Compositor_BenchmarkResults *pBenchmarkResults, uint32_t nSizeOfBenchmarkResults ) { return _table.GetCompositorBenchmarkResults(pBenchmarkResults, nSizeOfBenchmarkResults); }
 
 	/** Returns the frame id associated with the poses last returned by WaitGetPoses.  Deltas between IDs correspond to number of headset vsync intervals. */
-	virtual EVRCompositorError GetLastPosePredictionIDs( uint32_t *pRenderPosePredictionID, uint32_t *pGamePosePredictionID ) = 0;
+	EVRCompositorError GetLastPosePredictionIDs( uint32_t *pRenderPosePredictionID, uint32_t *pGamePosePredictionID ) { return _table.GetLastPosePredictionIDs(pRenderPosePredictionID, pGamePosePredictionID); }
 
 	/** Get the most up-to-date predicted (or recorded - up to 100ms old) set of poses for a given frame id. */
-	virtual EVRCompositorError GetPosesForFrame( uint32_t unPosePredictionID, VR_ARRAY_COUNT( unPoseArrayCount ) TrackedDevicePose_t* pPoseArray, uint32_t unPoseArrayCount ) = 0;
+	EVRCompositorError GetPosesForFrame( uint32_t unPosePredictionID, VR_ARRAY_COUNT( unPoseArrayCount ) TrackedDevicePose_t* pPoseArray, uint32_t unPoseArrayCount ) { return _table.GetPosesForFrame(unPosePredictionID, pPoseArray, unPoseArrayCount); }
 };
 
-static const char * const IVRCompositor_Version = "IVRCompositor_027";
+static const char * const IVRCompositor_Version = "FnTable:IVRCompositor_027";
 
 } // namespace vr
 
@@ -3520,46 +3720,60 @@ namespace vr
 		HeadsetViewMode_Both
 	};
 
+	struct VR_IVRHeadsetView_FnTable
+	{
+		void (__stdcall *SetHeadsetViewSize)( uint32_t nWidth, uint32_t nHeight );
+		void (__stdcall *GetHeadsetViewSize)( uint32_t *pnWidth, uint32_t *pnHeight );
+		void (__stdcall *SetHeadsetViewMode)( HeadsetViewMode_t eHeadsetViewMode );
+		HeadsetViewMode_t (__stdcall *GetHeadsetViewMode)();
+		void (__stdcall *SetHeadsetViewCropped)( bool bCropped );
+		bool (__stdcall *GetHeadsetViewCropped)();
+		float (__stdcall *GetHeadsetViewAspectRatio)();
+		void (__stdcall *SetHeadsetViewBlendRange)( float flStartPct, float flEndPct );
+		void (__stdcall *GetHeadsetViewBlendRange)( float *pStartPct, float *pEndPct );
+	};
+
 	class IVRHeadsetView
 	{
+		VR_IVRHeadsetView_FnTable _table;
 	public:
 		/** Sets the resolution in pixels to render the headset view. These values are clamped to k_unHeadsetViewMaxWidth
 		* and k_unHeadsetViewMaxHeight respectively. For cropped views, the rendered output will be fit to aspect ratio
 		* defined by the the specified dimensions. For uncropped views, the caller should use GetHeadsetViewAspectRation
 		* to adjust the requested render size to avoid squashing or stretching, and then apply letterboxing to compensate
 		* when displaying the results. */
-		virtual void SetHeadsetViewSize( uint32_t nWidth, uint32_t nHeight ) = 0;
+		void SetHeadsetViewSize( uint32_t nWidth, uint32_t nHeight ) { _table.SetHeadsetViewSize(nWidth, nHeight); }
 
 		/** Gets the current resolution used to render the headset view. */
-		virtual void GetHeadsetViewSize( uint32_t *pnWidth, uint32_t *pnHeight ) = 0;
+		void GetHeadsetViewSize( uint32_t *pnWidth, uint32_t *pnHeight ) { _table.GetHeadsetViewSize(pnWidth, pnHeight); }
 
 		/** Set the mode used to render the headset view. */
-		virtual void SetHeadsetViewMode( HeadsetViewMode_t eHeadsetViewMode ) = 0;
+		void SetHeadsetViewMode( HeadsetViewMode_t eHeadsetViewMode ) { _table.SetHeadsetViewMode(eHeadsetViewMode); }
 
 		/** Get the current mode used to render the headset view. */
-		virtual HeadsetViewMode_t GetHeadsetViewMode() = 0;
+		HeadsetViewMode_t GetHeadsetViewMode() { return _table.GetHeadsetViewMode(); }
 
 		/** Set whether or not the headset view should be rendered cropped to hide the hidden area mesh or not. */
-		virtual void SetHeadsetViewCropped( bool bCropped ) = 0;
+		void SetHeadsetViewCropped( bool bCropped ) { _table.SetHeadsetViewCropped(bCropped); }
 
 		/** Get the current cropping status of the headset view. */
-		virtual bool GetHeadsetViewCropped() = 0;
+		bool GetHeadsetViewCropped() { return _table.GetHeadsetViewCropped(); }
 
 		/** Get the aspect ratio (width:height) of the uncropped headset view (accounting for the current set mode). */
-		virtual float GetHeadsetViewAspectRatio() = 0;
+		float GetHeadsetViewAspectRatio() { return _table.GetHeadsetViewAspectRatio(); }
 
 		/** Set the range [0..1] that the headset view blends across the stereo overlapped area in cropped both mode. */
-		virtual void SetHeadsetViewBlendRange( float flStartPct, float flEndPct ) = 0;
+		void SetHeadsetViewBlendRange( float flStartPct, float flEndPct ) { _table.SetHeadsetViewBlendRange(flStartPct, flEndPct); }
 
 		/** Get the current range [0..1] that the headset view blends across the stereo overlapped area in cropped both mode. */
-		virtual void GetHeadsetViewBlendRange( float *pStartPct, float *pEndPct ) = 0;
+		void GetHeadsetViewBlendRange( float *pStartPct, float *pEndPct ) { _table.GetHeadsetViewBlendRange(pStartPct, pEndPct); }
 	};
 
 	static const uint32_t k_unHeadsetViewMaxWidth = 3840;
 	static const uint32_t k_unHeadsetViewMaxHeight = 2160;
 	static const char * const k_pchHeadsetViewOverlayKey = "system.HeadsetView";
 
-	static const char * const IVRHeadsetView_Version = "IVRHeadsetView_001";
+	static const char * const IVRHeadsetView_Version = "FnTable:IVRHeadsetView_001";
 
 	/** Returns the current IVRHeadsetView pointer or NULL the interface could not be found. */
 	VR_INTERFACE vr::IVRHeadsetView *VR_CALLTYPE VRHeadsetView();
@@ -3637,21 +3851,28 @@ typedef uint32_t VRNotificationId;
 
 /** Allows notification sources to interact with the VR system
 	This current interface is not yet implemented. Do not use yet. */
+struct VR_IVRNotifications_FnTable
+{
+	EVRNotificationError (__stdcall *CreateNotification)( VROverlayHandle_t ulOverlayHandle, uint64_t ulUserValue, EVRNotificationType type, const char *pchText, EVRNotificationStyle style, const NotificationBitmap_t *pImage, /* out */ VRNotificationId *pNotificationId );
+	EVRNotificationError (__stdcall *RemoveNotification)( VRNotificationId notificationId );
+};
+
 class IVRNotifications
 {
+	VR_IVRNotifications_FnTable _table;
 public:
 	/** Create a notification and enqueue it to be shown to the user.
 	* An overlay handle is required to create a notification, as otherwise it would be impossible for a user to act on it.
 	* To create a two-line notification, use a line break ('\n') to split the text into two lines.
 	* The pImage argument may be NULL, in which case the specified overlay's icon will be used instead. */
-	virtual EVRNotificationError CreateNotification( VROverlayHandle_t ulOverlayHandle, uint64_t ulUserValue, EVRNotificationType type, const char *pchText, EVRNotificationStyle style, const NotificationBitmap_t *pImage, /* out */ VRNotificationId *pNotificationId ) = 0;
+	EVRNotificationError CreateNotification( VROverlayHandle_t ulOverlayHandle, uint64_t ulUserValue, EVRNotificationType type, const char *pchText, EVRNotificationStyle style, const NotificationBitmap_t *pImage, /* out */ VRNotificationId *pNotificationId ) { return _table.CreateNotification(ulOverlayHandle, ulUserValue, type, pchText, style, pImage, pNotificationId); }
 
 	/** Destroy a notification, hiding it first if it currently shown to the user. */
-	virtual EVRNotificationError RemoveNotification( VRNotificationId notificationId ) = 0;
+	EVRNotificationError RemoveNotification( VRNotificationId notificationId ) { return _table.RemoveNotification(notificationId); }
 
 };
 
-static const char * const IVRNotifications_Version = "IVRNotifications_002";
+static const char * const IVRNotifications_Version = "FnTable:IVRNotifications_002";
 
 } // namespace vr
 
@@ -3846,8 +4067,97 @@ namespace vr
 		float fBottom;
 	};
 
+	struct VR_IVROverlay_FnTable
+	{
+		EVROverlayError (__stdcall *FindOverlay)( const char *pchOverlayKey, VROverlayHandle_t * pOverlayHandle );
+		EVROverlayError (__stdcall *CreateOverlay)( const char *pchOverlayKey, const char *pchOverlayName, VROverlayHandle_t * pOverlayHandle );
+		EVROverlayError (__stdcall *DestroyOverlay)( VROverlayHandle_t ulOverlayHandle );
+		uint32_t (__stdcall *GetOverlayKey)( VROverlayHandle_t ulOverlayHandle,  char *pchValue, uint32_t unBufferSize, EVROverlayError *pError);
+		uint32_t (__stdcall *GetOverlayName)( VROverlayHandle_t ulOverlayHandle,  char *pchValue, uint32_t unBufferSize, EVROverlayError *pError);
+		EVROverlayError (__stdcall *SetOverlayName)( VROverlayHandle_t ulOverlayHandle, const char *pchName );
+		EVROverlayError (__stdcall *GetOverlayImageData)( VROverlayHandle_t ulOverlayHandle, void *pvBuffer, uint32_t unBufferSize, uint32_t *punWidth, uint32_t *punHeight );
+		const char *(__stdcall *GetOverlayErrorNameFromEnum)( EVROverlayError error );
+		EVROverlayError (__stdcall *SetOverlayRenderingPid)( VROverlayHandle_t ulOverlayHandle, uint32_t unPID );
+		uint32_t (__stdcall *GetOverlayRenderingPid)( VROverlayHandle_t ulOverlayHandle );
+		EVROverlayError (__stdcall *SetOverlayFlag)( VROverlayHandle_t ulOverlayHandle, VROverlayFlags eOverlayFlag, bool bEnabled );
+		EVROverlayError (__stdcall *GetOverlayFlag)( VROverlayHandle_t ulOverlayHandle, VROverlayFlags eOverlayFlag, bool *pbEnabled );
+		EVROverlayError (__stdcall *GetOverlayFlags)( VROverlayHandle_t ulOverlayHandle, uint32_t *pFlags );
+		EVROverlayError (__stdcall *SetOverlayColor)( VROverlayHandle_t ulOverlayHandle, float fRed, float fGreen, float fBlue );
+		EVROverlayError (__stdcall *GetOverlayColor)( VROverlayHandle_t ulOverlayHandle, float *pfRed, float *pfGreen, float *pfBlue );
+		EVROverlayError (__stdcall *SetOverlayAlpha)( VROverlayHandle_t ulOverlayHandle, float fAlpha );
+		EVROverlayError (__stdcall *GetOverlayAlpha)( VROverlayHandle_t ulOverlayHandle, float *pfAlpha );
+		EVROverlayError (__stdcall *SetOverlayTexelAspect)( VROverlayHandle_t ulOverlayHandle, float fTexelAspect );
+		EVROverlayError (__stdcall *GetOverlayTexelAspect)( VROverlayHandle_t ulOverlayHandle, float *pfTexelAspect );
+		EVROverlayError (__stdcall *SetOverlaySortOrder)( VROverlayHandle_t ulOverlayHandle, uint32_t unSortOrder );
+		EVROverlayError (__stdcall *GetOverlaySortOrder)( VROverlayHandle_t ulOverlayHandle, uint32_t *punSortOrder );
+		EVROverlayError (__stdcall *SetOverlayWidthInMeters)( VROverlayHandle_t ulOverlayHandle, float fWidthInMeters );
+		EVROverlayError (__stdcall *GetOverlayWidthInMeters)( VROverlayHandle_t ulOverlayHandle, float *pfWidthInMeters );
+		EVROverlayError (__stdcall *SetOverlayCurvature)( VROverlayHandle_t ulOverlayHandle, float fCurvature );
+		EVROverlayError (__stdcall *GetOverlayCurvature)( VROverlayHandle_t ulOverlayHandle, float *pfCurvature );
+		EVROverlayError (__stdcall *SetOverlayTextureColorSpace)( VROverlayHandle_t ulOverlayHandle, EColorSpace eTextureColorSpace );
+		EVROverlayError (__stdcall *GetOverlayTextureColorSpace)( VROverlayHandle_t ulOverlayHandle, EColorSpace *peTextureColorSpace );
+		EVROverlayError (__stdcall *SetOverlayTextureBounds)( VROverlayHandle_t ulOverlayHandle, const VRTextureBounds_t *pOverlayTextureBounds );
+		EVROverlayError (__stdcall *GetOverlayTextureBounds)( VROverlayHandle_t ulOverlayHandle, VRTextureBounds_t *pOverlayTextureBounds );
+		EVROverlayError (__stdcall *GetOverlayTransformType)( VROverlayHandle_t ulOverlayHandle, VROverlayTransformType *peTransformType );
+		EVROverlayError (__stdcall *SetOverlayTransformAbsolute)( VROverlayHandle_t ulOverlayHandle, ETrackingUniverseOrigin eTrackingOrigin, const HmdMatrix34_t *pmatTrackingOriginToOverlayTransform );
+		EVROverlayError (__stdcall *GetOverlayTransformAbsolute)( VROverlayHandle_t ulOverlayHandle, ETrackingUniverseOrigin *peTrackingOrigin, HmdMatrix34_t *pmatTrackingOriginToOverlayTransform );
+		EVROverlayError (__stdcall *SetOverlayTransformTrackedDeviceRelative)( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t unTrackedDevice, const HmdMatrix34_t *pmatTrackedDeviceToOverlayTransform );
+		EVROverlayError (__stdcall *GetOverlayTransformTrackedDeviceRelative)( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t *punTrackedDevice, HmdMatrix34_t *pmatTrackedDeviceToOverlayTransform );
+		EVROverlayError (__stdcall *SetOverlayTransformTrackedDeviceComponent)( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t unDeviceIndex, const char *pchComponentName );
+		EVROverlayError (__stdcall *GetOverlayTransformTrackedDeviceComponent)( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t *punDeviceIndex,  char *pchComponentName, uint32_t unComponentNameSize );
+		vr::EVROverlayError (__stdcall *GetOverlayTransformOverlayRelative)( VROverlayHandle_t ulOverlayHandle, VROverlayHandle_t *ulOverlayHandleParent, HmdMatrix34_t *pmatParentOverlayToOverlayTransform );
+		vr::EVROverlayError (__stdcall *SetOverlayTransformOverlayRelative)( VROverlayHandle_t ulOverlayHandle, VROverlayHandle_t ulOverlayHandleParent, const HmdMatrix34_t *pmatParentOverlayToOverlayTransform );
+		EVROverlayError (__stdcall *SetOverlayTransformCursor)( VROverlayHandle_t ulCursorOverlayHandle, const HmdVector2_t *pvHotspot );
+		vr::EVROverlayError (__stdcall *GetOverlayTransformCursor)( VROverlayHandle_t ulOverlayHandle, HmdVector2_t *pvHotspot );
+		vr::EVROverlayError (__stdcall *SetOverlayTransformProjection)( VROverlayHandle_t ulOverlayHandle,
+			ETrackingUniverseOrigin eTrackingOrigin, const HmdMatrix34_t* pmatTrackingOriginToOverlayTransform,
+			const VROverlayProjection_t *pProjection, vr::EVREye eEye );
+		EVROverlayError (__stdcall *ShowOverlay)( VROverlayHandle_t ulOverlayHandle );
+		EVROverlayError (__stdcall *HideOverlay)( VROverlayHandle_t ulOverlayHandle );
+		bool (__stdcall *IsOverlayVisible)( VROverlayHandle_t ulOverlayHandle );
+		EVROverlayError (__stdcall *GetTransformForOverlayCoordinates)( VROverlayHandle_t ulOverlayHandle, ETrackingUniverseOrigin eTrackingOrigin, HmdVector2_t coordinatesInOverlay, HmdMatrix34_t *pmatTransform );
+		bool (__stdcall *PollNextOverlayEvent)( VROverlayHandle_t ulOverlayHandle, VREvent_t *pEvent, uint32_t uncbVREvent );
+		EVROverlayError (__stdcall *GetOverlayInputMethod)( VROverlayHandle_t ulOverlayHandle, VROverlayInputMethod *peInputMethod );
+		EVROverlayError (__stdcall *SetOverlayInputMethod)( VROverlayHandle_t ulOverlayHandle, VROverlayInputMethod eInputMethod );
+		EVROverlayError (__stdcall *GetOverlayMouseScale)( VROverlayHandle_t ulOverlayHandle, HmdVector2_t *pvecMouseScale );
+		EVROverlayError (__stdcall *SetOverlayMouseScale)( VROverlayHandle_t ulOverlayHandle, const HmdVector2_t *pvecMouseScale );
+		bool (__stdcall *ComputeOverlayIntersection)( VROverlayHandle_t ulOverlayHandle, const VROverlayIntersectionParams_t *pParams, VROverlayIntersectionResults_t *pResults );
+		bool (__stdcall *IsHoverTargetOverlay)( VROverlayHandle_t ulOverlayHandle );
+		EVROverlayError (__stdcall *SetOverlayIntersectionMask)( VROverlayHandle_t ulOverlayHandle, VROverlayIntersectionMaskPrimitive_t *pMaskPrimitives, uint32_t unNumMaskPrimitives, uint32_t unPrimitiveSize);
+		EVROverlayError (__stdcall *TriggerLaserMouseHapticVibration)( VROverlayHandle_t ulOverlayHandle, float fDurationSeconds, float fFrequency, float fAmplitude );
+		EVROverlayError (__stdcall *SetOverlayCursor)( VROverlayHandle_t ulOverlayHandle, VROverlayHandle_t ulCursorHandle );
+		EVROverlayError (__stdcall *SetOverlayCursorPositionOverride)( VROverlayHandle_t ulOverlayHandle, const HmdVector2_t *pvCursor );
+		EVROverlayError (__stdcall *ClearOverlayCursorPositionOverride)( VROverlayHandle_t ulOverlayHandle );
+		EVROverlayError (__stdcall *SetOverlayTexture)( VROverlayHandle_t ulOverlayHandle, const Texture_t *pTexture );
+		EVROverlayError (__stdcall *ClearOverlayTexture)( VROverlayHandle_t ulOverlayHandle );
+		EVROverlayError (__stdcall *SetOverlayRaw)( VROverlayHandle_t ulOverlayHandle, void *pvBuffer, uint32_t unWidth, uint32_t unHeight, uint32_t unBytesPerPixel );
+		EVROverlayError (__stdcall *SetOverlayFromFile)( VROverlayHandle_t ulOverlayHandle, const char *pchFilePath );
+		EVROverlayError (__stdcall *GetOverlayTexture)( VROverlayHandle_t ulOverlayHandle, void **pNativeTextureHandle, void *pNativeTextureRef, uint32_t *pWidth, uint32_t *pHeight, uint32_t *pNativeFormat, ETextureType *pAPIType, EColorSpace *pColorSpace, VRTextureBounds_t *pTextureBounds );
+		EVROverlayError (__stdcall *ReleaseNativeOverlayHandle)( VROverlayHandle_t ulOverlayHandle, void *pNativeTextureHandle );
+		EVROverlayError (__stdcall *GetOverlayTextureSize)( VROverlayHandle_t ulOverlayHandle, uint32_t *pWidth, uint32_t *pHeight );
+		EVROverlayError (__stdcall *CreateDashboardOverlay)( const char *pchOverlayKey, const char *pchOverlayFriendlyName, VROverlayHandle_t * pMainHandle, VROverlayHandle_t *pThumbnailHandle );
+		bool (__stdcall *IsDashboardVisible)();
+		bool (__stdcall *IsActiveDashboardOverlay)( VROverlayHandle_t ulOverlayHandle );
+		EVROverlayError (__stdcall *SetDashboardOverlaySceneProcess)( VROverlayHandle_t ulOverlayHandle, uint32_t unProcessId );
+		EVROverlayError (__stdcall *GetDashboardOverlaySceneProcess)( VROverlayHandle_t ulOverlayHandle, uint32_t *punProcessId );
+		void (__stdcall *ShowDashboard)( const char *pchOverlayToShow );
+		vr::TrackedDeviceIndex_t (__stdcall *GetPrimaryDashboardDevice)();
+		EVROverlayError (__stdcall *ShowKeyboard)( EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, uint32_t unFlags,
+			const char *pchDescription, uint32_t unCharMax, const char *pchExistingText, uint64_t uUserValue );
+		EVROverlayError (__stdcall *ShowKeyboardForOverlay)( VROverlayHandle_t ulOverlayHandle, EGamepadTextInputMode eInputMode,
+			EGamepadTextInputLineMode eLineInputMode, uint32_t unFlags, const char *pchDescription, uint32_t unCharMax,
+			const char *pchExistingText, uint64_t uUserValue );
+		uint32_t (__stdcall *GetKeyboardText)(  char *pchText, uint32_t cchText );
+		void (__stdcall *HideKeyboard)();
+		void (__stdcall *SetKeyboardTransformAbsolute)( ETrackingUniverseOrigin eTrackingOrigin, const HmdMatrix34_t *pmatTrackingOriginToKeyboardTransform );
+		void (__stdcall *SetKeyboardPositionForOverlay)( VROverlayHandle_t ulOverlayHandle, HmdRect2_t avoidRect );
+		VRMessageOverlayResponse (__stdcall *ShowMessageOverlay)( const char* pchText, const char* pchCaption, const char* pchButton0Text, const char* pchButton1Text, const char* pchButton2Text, const char* pchButton3Text);
+		void (__stdcall *CloseMessageOverlay)();
+	};
+
 	class IVROverlay
 	{
+		VR_IVROverlay_FnTable _table;
 	public:
 
 		// ---------------------------------------------
@@ -3855,33 +4165,33 @@ namespace vr
 		// ---------------------------------------------
 
 		/** Finds an existing overlay with the specified key. */
-		virtual EVROverlayError FindOverlay( const char *pchOverlayKey, VROverlayHandle_t * pOverlayHandle ) = 0;
+		EVROverlayError FindOverlay( const char *pchOverlayKey, VROverlayHandle_t * pOverlayHandle ) { return _table.FindOverlay(pchOverlayKey, pOverlayHandle); }
 
 		/** Creates a new named overlay. All overlays start hidden and with default settings. */
-		virtual EVROverlayError CreateOverlay( const char *pchOverlayKey, const char *pchOverlayName, VROverlayHandle_t * pOverlayHandle ) = 0;
+		EVROverlayError CreateOverlay( const char *pchOverlayKey, const char *pchOverlayName, VROverlayHandle_t * pOverlayHandle ) { return _table.CreateOverlay(pchOverlayKey, pchOverlayName, pOverlayHandle); }
 
 		/** Destroys the specified overlay. When an application calls VR_Shutdown all overlays created by that app are
 		* automatically destroyed. */
-		virtual EVROverlayError DestroyOverlay( VROverlayHandle_t ulOverlayHandle ) = 0;
+		EVROverlayError DestroyOverlay( VROverlayHandle_t ulOverlayHandle ) { return _table.DestroyOverlay(ulOverlayHandle); }
 
 		/** Fills the provided buffer with the string key of the overlay. Returns the size of buffer required to store the key, including
 		* the terminating null character. k_unVROverlayMaxKeyLength will be enough bytes to fit the string. */
-		virtual uint32_t GetOverlayKey( VROverlayHandle_t ulOverlayHandle, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize, EVROverlayError *pError = 0L ) = 0;
+		uint32_t GetOverlayKey( VROverlayHandle_t ulOverlayHandle, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize, EVROverlayError *pError = 0L ) { return _table.GetOverlayKey(ulOverlayHandle, pchValue, unBufferSize, pError); }
 
 		/** Fills the provided buffer with the friendly name of the overlay. Returns the size of buffer required to store the key, including
 		* the terminating null character. k_unVROverlayMaxNameLength will be enough bytes to fit the string. */
-		virtual uint32_t GetOverlayName( VROverlayHandle_t ulOverlayHandle, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize, EVROverlayError *pError = 0L ) = 0;
+		uint32_t GetOverlayName( VROverlayHandle_t ulOverlayHandle, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize, EVROverlayError *pError = 0L ) { return _table.GetOverlayName(ulOverlayHandle, pchValue, unBufferSize, pError); }
 
 		/** set the name to use for this overlay */
-		virtual EVROverlayError SetOverlayName( VROverlayHandle_t ulOverlayHandle, const char *pchName ) = 0;
+		EVROverlayError SetOverlayName( VROverlayHandle_t ulOverlayHandle, const char *pchName ) { return _table.SetOverlayName(ulOverlayHandle, pchName); }
 
 		/** Gets the raw image data from an overlay. Overlay image data is always returned as RGBA data, 4 bytes per pixel. If the buffer is not large enough, width and height
 		* will be set and VROverlayError_ArrayTooSmall is returned. */
-		virtual EVROverlayError GetOverlayImageData( VROverlayHandle_t ulOverlayHandle, void *pvBuffer, uint32_t unBufferSize, uint32_t *punWidth, uint32_t *punHeight ) = 0;
+		EVROverlayError GetOverlayImageData( VROverlayHandle_t ulOverlayHandle, void *pvBuffer, uint32_t unBufferSize, uint32_t *punWidth, uint32_t *punHeight ) { return _table.GetOverlayImageData(ulOverlayHandle, pvBuffer, unBufferSize, punWidth, punHeight); }
 
 		/** returns a string that corresponds with the specified overlay error. The string will be the name
 		* of the error enum value for all valid error codes */
-		virtual const char *GetOverlayErrorNameFromEnum( EVROverlayError error ) = 0;
+		const char *GetOverlayErrorNameFromEnum( EVROverlayError error ) { return _table.GetOverlayErrorNameFromEnum(error); }
 
 		// ---------------------------------------------
 		// Overlay rendering methods
@@ -3889,38 +4199,38 @@ namespace vr
 
 		/** Sets the pid that is allowed to render to this overlay (the creator pid is always allow to render),
 		*	by default this is the pid of the process that made the overlay */
-		virtual EVROverlayError SetOverlayRenderingPid( VROverlayHandle_t ulOverlayHandle, uint32_t unPID ) = 0;
+		EVROverlayError SetOverlayRenderingPid( VROverlayHandle_t ulOverlayHandle, uint32_t unPID ) { return _table.SetOverlayRenderingPid(ulOverlayHandle, unPID); }
 
 		/** Gets the pid that is allowed to render to this overlay */
-		virtual uint32_t GetOverlayRenderingPid( VROverlayHandle_t ulOverlayHandle ) = 0;
+		uint32_t GetOverlayRenderingPid( VROverlayHandle_t ulOverlayHandle ) { return _table.GetOverlayRenderingPid(ulOverlayHandle); }
 
 		/** Specify flag setting for a given overlay */
-		virtual EVROverlayError SetOverlayFlag( VROverlayHandle_t ulOverlayHandle, VROverlayFlags eOverlayFlag, bool bEnabled ) = 0;
+		EVROverlayError SetOverlayFlag( VROverlayHandle_t ulOverlayHandle, VROverlayFlags eOverlayFlag, bool bEnabled ) { return _table.SetOverlayFlag(ulOverlayHandle, eOverlayFlag, bEnabled); }
 
 		/** Sets flag setting for a given overlay */
-		virtual EVROverlayError GetOverlayFlag( VROverlayHandle_t ulOverlayHandle, VROverlayFlags eOverlayFlag, bool *pbEnabled ) = 0;
+		EVROverlayError GetOverlayFlag( VROverlayHandle_t ulOverlayHandle, VROverlayFlags eOverlayFlag, bool *pbEnabled ) { return _table.GetOverlayFlag(ulOverlayHandle, eOverlayFlag, pbEnabled); }
 
 		/** Gets all the flags for a given overlay */
-		virtual EVROverlayError GetOverlayFlags( VROverlayHandle_t ulOverlayHandle, uint32_t *pFlags ) = 0;
+		EVROverlayError GetOverlayFlags( VROverlayHandle_t ulOverlayHandle, uint32_t *pFlags ) { return _table.GetOverlayFlags(ulOverlayHandle, pFlags); }
 
 		/** Sets the color tint of the overlay quad. Use 0.0 to 1.0 per channel. */
-		virtual EVROverlayError SetOverlayColor( VROverlayHandle_t ulOverlayHandle, float fRed, float fGreen, float fBlue ) = 0;
+		EVROverlayError SetOverlayColor( VROverlayHandle_t ulOverlayHandle, float fRed, float fGreen, float fBlue ) { return _table.SetOverlayColor(ulOverlayHandle, fRed, fGreen, fBlue); }
 
 		/** Gets the color tint of the overlay quad. */
-		virtual EVROverlayError GetOverlayColor( VROverlayHandle_t ulOverlayHandle, float *pfRed, float *pfGreen, float *pfBlue ) = 0;
+		EVROverlayError GetOverlayColor( VROverlayHandle_t ulOverlayHandle, float *pfRed, float *pfGreen, float *pfBlue ) { return _table.GetOverlayColor(ulOverlayHandle, pfRed, pfGreen, pfBlue); }
 
 		/** Sets the alpha of the overlay quad. Use 1.0 for 100 percent opacity to 0.0 for 0 percent opacity. */
-		virtual EVROverlayError SetOverlayAlpha( VROverlayHandle_t ulOverlayHandle, float fAlpha ) = 0;
+		EVROverlayError SetOverlayAlpha( VROverlayHandle_t ulOverlayHandle, float fAlpha ) { return _table.SetOverlayAlpha(ulOverlayHandle, fAlpha); }
 
 		/** Gets the alpha of the overlay quad. By default overlays are rendering at 100 percent alpha (1.0). */
-		virtual EVROverlayError GetOverlayAlpha( VROverlayHandle_t ulOverlayHandle, float *pfAlpha ) = 0;
+		EVROverlayError GetOverlayAlpha( VROverlayHandle_t ulOverlayHandle, float *pfAlpha ) { return _table.GetOverlayAlpha(ulOverlayHandle, pfAlpha); }
 
 		/** Sets the aspect ratio of the texels in the overlay. 1.0 means the texels are square. 2.0 means the texels
 		* are twice as wide as they are tall. Defaults to 1.0. */
-		virtual EVROverlayError SetOverlayTexelAspect( VROverlayHandle_t ulOverlayHandle, float fTexelAspect ) = 0;
+		EVROverlayError SetOverlayTexelAspect( VROverlayHandle_t ulOverlayHandle, float fTexelAspect ) { return _table.SetOverlayTexelAspect(ulOverlayHandle, fTexelAspect); }
 
 		/** Gets the aspect ratio of the texels in the overlay. Defaults to 1.0 */
-		virtual EVROverlayError GetOverlayTexelAspect( VROverlayHandle_t ulOverlayHandle, float *pfTexelAspect ) = 0;
+		EVROverlayError GetOverlayTexelAspect( VROverlayHandle_t ulOverlayHandle, float *pfTexelAspect ) { return _table.GetOverlayTexelAspect(ulOverlayHandle, pfTexelAspect); }
 
 		/** Sets the rendering sort order for the overlay. Overlays are rendered this order:
 		*      Overlays owned by the scene application
@@ -3930,88 +4240,88 @@ namespace vr
 		*	sort order are rendered back to front base on distance from the HMD.
 		*
 		*	Sort order defaults to 0. */
-		virtual EVROverlayError SetOverlaySortOrder( VROverlayHandle_t ulOverlayHandle, uint32_t unSortOrder ) = 0;
+		EVROverlayError SetOverlaySortOrder( VROverlayHandle_t ulOverlayHandle, uint32_t unSortOrder ) { return _table.SetOverlaySortOrder(ulOverlayHandle, unSortOrder); }
 
 		/** Gets the sort order of the overlay. See SetOverlaySortOrder for how this works. */
-		virtual EVROverlayError GetOverlaySortOrder( VROverlayHandle_t ulOverlayHandle, uint32_t *punSortOrder ) = 0;
+		EVROverlayError GetOverlaySortOrder( VROverlayHandle_t ulOverlayHandle, uint32_t *punSortOrder ) { return _table.GetOverlaySortOrder(ulOverlayHandle, punSortOrder); }
 
 		/** Sets the width of the overlay quad in meters. By default overlays are rendered on a quad that is 1 meter across */
-		virtual EVROverlayError SetOverlayWidthInMeters( VROverlayHandle_t ulOverlayHandle, float fWidthInMeters ) = 0;
+		EVROverlayError SetOverlayWidthInMeters( VROverlayHandle_t ulOverlayHandle, float fWidthInMeters ) { return _table.SetOverlayWidthInMeters(ulOverlayHandle, fWidthInMeters); }
 
 		/** Returns the width of the overlay quad in meters. By default overlays are rendered on a quad that is 1 meter across */
-		virtual EVROverlayError GetOverlayWidthInMeters( VROverlayHandle_t ulOverlayHandle, float *pfWidthInMeters ) = 0;
+		EVROverlayError GetOverlayWidthInMeters( VROverlayHandle_t ulOverlayHandle, float *pfWidthInMeters ) { return _table.GetOverlayWidthInMeters(ulOverlayHandle, pfWidthInMeters); }
 
 		/** Use to draw overlay as a curved surface. Curvature is a percentage from (0..1] where 1 is a fully closed cylinder.
 		* For a specific radius, curvature can be computed as: overlay.width / (2 PI r). */
-		virtual EVROverlayError SetOverlayCurvature( VROverlayHandle_t ulOverlayHandle, float fCurvature ) = 0;
+		EVROverlayError SetOverlayCurvature( VROverlayHandle_t ulOverlayHandle, float fCurvature ) { return _table.SetOverlayCurvature(ulOverlayHandle, fCurvature); }
 
 		/** Returns the curvature of the overlay as a percentage from (0..1] where 1 is a fully closed cylinder. */
-		virtual EVROverlayError GetOverlayCurvature( VROverlayHandle_t ulOverlayHandle, float *pfCurvature ) = 0;
+		EVROverlayError GetOverlayCurvature( VROverlayHandle_t ulOverlayHandle, float *pfCurvature ) { return _table.GetOverlayCurvature(ulOverlayHandle, pfCurvature); }
 
 		/** Sets the colorspace the overlay texture's data is in.  Defaults to 'auto'.
 		* If the texture needs to be resolved, you should call SetOverlayTexture with the appropriate colorspace instead. */
-		virtual EVROverlayError SetOverlayTextureColorSpace( VROverlayHandle_t ulOverlayHandle, EColorSpace eTextureColorSpace ) = 0;
+		EVROverlayError SetOverlayTextureColorSpace( VROverlayHandle_t ulOverlayHandle, EColorSpace eTextureColorSpace ) { return _table.SetOverlayTextureColorSpace(ulOverlayHandle, eTextureColorSpace); }
 
 		/** Gets the overlay's current colorspace setting. */
-		virtual EVROverlayError GetOverlayTextureColorSpace( VROverlayHandle_t ulOverlayHandle, EColorSpace *peTextureColorSpace ) = 0;
+		EVROverlayError GetOverlayTextureColorSpace( VROverlayHandle_t ulOverlayHandle, EColorSpace *peTextureColorSpace ) { return _table.GetOverlayTextureColorSpace(ulOverlayHandle, peTextureColorSpace); }
 
 		/** Sets the part of the texture to use for the overlay. UV Min is the upper left corner and UV Max is the lower right corner. */
-		virtual EVROverlayError SetOverlayTextureBounds( VROverlayHandle_t ulOverlayHandle, const VRTextureBounds_t *pOverlayTextureBounds ) = 0;
+		EVROverlayError SetOverlayTextureBounds( VROverlayHandle_t ulOverlayHandle, const VRTextureBounds_t *pOverlayTextureBounds ) { return _table.SetOverlayTextureBounds(ulOverlayHandle, pOverlayTextureBounds); }
 
 		/** Gets the part of the texture to use for the overlay. UV Min is the upper left corner and UV Max is the lower right corner. */
-		virtual EVROverlayError GetOverlayTextureBounds( VROverlayHandle_t ulOverlayHandle, VRTextureBounds_t *pOverlayTextureBounds ) = 0;
+		EVROverlayError GetOverlayTextureBounds( VROverlayHandle_t ulOverlayHandle, VRTextureBounds_t *pOverlayTextureBounds ) { return _table.GetOverlayTextureBounds(ulOverlayHandle, pOverlayTextureBounds); }
 
 		/** Returns the transform type of this overlay. */
-		virtual EVROverlayError GetOverlayTransformType( VROverlayHandle_t ulOverlayHandle, VROverlayTransformType *peTransformType ) = 0;
+		EVROverlayError GetOverlayTransformType( VROverlayHandle_t ulOverlayHandle, VROverlayTransformType *peTransformType ) { return _table.GetOverlayTransformType(ulOverlayHandle, peTransformType); }
 
 		/** Sets the transform to absolute tracking origin. */
-		virtual EVROverlayError SetOverlayTransformAbsolute( VROverlayHandle_t ulOverlayHandle, ETrackingUniverseOrigin eTrackingOrigin, const HmdMatrix34_t *pmatTrackingOriginToOverlayTransform ) = 0;
+		EVROverlayError SetOverlayTransformAbsolute( VROverlayHandle_t ulOverlayHandle, ETrackingUniverseOrigin eTrackingOrigin, const HmdMatrix34_t *pmatTrackingOriginToOverlayTransform ) { return _table.SetOverlayTransformAbsolute(ulOverlayHandle, eTrackingOrigin, pmatTrackingOriginToOverlayTransform); }
 
 		/** Gets the transform if it is absolute. Returns an error if the transform is some other type. */
-		virtual EVROverlayError GetOverlayTransformAbsolute( VROverlayHandle_t ulOverlayHandle, ETrackingUniverseOrigin *peTrackingOrigin, HmdMatrix34_t *pmatTrackingOriginToOverlayTransform ) = 0;
+		EVROverlayError GetOverlayTransformAbsolute( VROverlayHandle_t ulOverlayHandle, ETrackingUniverseOrigin *peTrackingOrigin, HmdMatrix34_t *pmatTrackingOriginToOverlayTransform ) { return _table.GetOverlayTransformAbsolute(ulOverlayHandle, peTrackingOrigin, pmatTrackingOriginToOverlayTransform); }
 
 		/** Sets the transform to relative to the transform of the specified tracked device. */
-		virtual EVROverlayError SetOverlayTransformTrackedDeviceRelative( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t unTrackedDevice, const HmdMatrix34_t *pmatTrackedDeviceToOverlayTransform ) = 0;
+		EVROverlayError SetOverlayTransformTrackedDeviceRelative( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t unTrackedDevice, const HmdMatrix34_t *pmatTrackedDeviceToOverlayTransform ) { return _table.SetOverlayTransformTrackedDeviceRelative(ulOverlayHandle, unTrackedDevice, pmatTrackedDeviceToOverlayTransform); }
 
 		/** Gets the transform if it is relative to a tracked device. Returns an error if the transform is some other type. */
-		virtual EVROverlayError GetOverlayTransformTrackedDeviceRelative( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t *punTrackedDevice, HmdMatrix34_t *pmatTrackedDeviceToOverlayTransform ) = 0;
+		EVROverlayError GetOverlayTransformTrackedDeviceRelative( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t *punTrackedDevice, HmdMatrix34_t *pmatTrackedDeviceToOverlayTransform ) { return _table.GetOverlayTransformTrackedDeviceRelative(ulOverlayHandle, punTrackedDevice, pmatTrackedDeviceToOverlayTransform); }
 
 		/** Sets the transform to draw the overlay on a rendermodel component mesh instead of a quad. This will only draw when the system is
 		* drawing the device. Overlays with this transform type cannot receive mouse events. */
-		virtual EVROverlayError SetOverlayTransformTrackedDeviceComponent( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t unDeviceIndex, const char *pchComponentName ) = 0;
+		EVROverlayError SetOverlayTransformTrackedDeviceComponent( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t unDeviceIndex, const char *pchComponentName ) { return _table.SetOverlayTransformTrackedDeviceComponent(ulOverlayHandle, unDeviceIndex, pchComponentName); }
 
 		/** Gets the transform information when the overlay is rendering on a component. */
-		virtual EVROverlayError GetOverlayTransformTrackedDeviceComponent( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t *punDeviceIndex, VR_OUT_STRING() char *pchComponentName, uint32_t unComponentNameSize ) = 0;
+		EVROverlayError GetOverlayTransformTrackedDeviceComponent( VROverlayHandle_t ulOverlayHandle, TrackedDeviceIndex_t *punDeviceIndex, VR_OUT_STRING() char *pchComponentName, uint32_t unComponentNameSize ) { return _table.GetOverlayTransformTrackedDeviceComponent(ulOverlayHandle, punDeviceIndex, pchComponentName, unComponentNameSize); }
 
 		/** Gets the transform if it is relative to another overlay. Returns an error if the transform is some other type. */
-		virtual vr::EVROverlayError GetOverlayTransformOverlayRelative( VROverlayHandle_t ulOverlayHandle, VROverlayHandle_t *ulOverlayHandleParent, HmdMatrix34_t *pmatParentOverlayToOverlayTransform ) = 0;
+		vr::EVROverlayError GetOverlayTransformOverlayRelative( VROverlayHandle_t ulOverlayHandle, VROverlayHandle_t *ulOverlayHandleParent, HmdMatrix34_t *pmatParentOverlayToOverlayTransform ) { return _table.GetOverlayTransformOverlayRelative(ulOverlayHandle, ulOverlayHandleParent, pmatParentOverlayToOverlayTransform); }
 
 		/** Sets the transform to relative to the transform of the specified overlay. This overlays visibility will also track the parents visibility */
-		virtual vr::EVROverlayError SetOverlayTransformOverlayRelative( VROverlayHandle_t ulOverlayHandle, VROverlayHandle_t ulOverlayHandleParent, const HmdMatrix34_t *pmatParentOverlayToOverlayTransform ) = 0;
+		vr::EVROverlayError SetOverlayTransformOverlayRelative( VROverlayHandle_t ulOverlayHandle, VROverlayHandle_t ulOverlayHandleParent, const HmdMatrix34_t *pmatParentOverlayToOverlayTransform ) { return _table.SetOverlayTransformOverlayRelative(ulOverlayHandle, ulOverlayHandleParent, pmatParentOverlayToOverlayTransform); }
 
 		/** Sets the hotspot for the specified overlay when that overlay is used as a cursor. These are in texture space with 0,0 in the upper left corner of
 		* the texture and 1,1 in the lower right corner of the texture. */
-		virtual EVROverlayError SetOverlayTransformCursor( VROverlayHandle_t ulCursorOverlayHandle, const HmdVector2_t *pvHotspot ) = 0;
+		EVROverlayError SetOverlayTransformCursor( VROverlayHandle_t ulCursorOverlayHandle, const HmdVector2_t *pvHotspot ) { return _table.SetOverlayTransformCursor(ulCursorOverlayHandle, pvHotspot); }
 
 		/** Gets cursor hotspot/transform for the specified overlay */
-		virtual vr::EVROverlayError GetOverlayTransformCursor( VROverlayHandle_t ulOverlayHandle, HmdVector2_t *pvHotspot ) = 0;
+		vr::EVROverlayError GetOverlayTransformCursor( VROverlayHandle_t ulOverlayHandle, HmdVector2_t *pvHotspot ) { return _table.GetOverlayTransformCursor(ulOverlayHandle, pvHotspot); }
 
 		/** Sets the overlay as a projection overlay */
-		virtual vr::EVROverlayError SetOverlayTransformProjection( VROverlayHandle_t ulOverlayHandle,
+		vr::EVROverlayError SetOverlayTransformProjection( VROverlayHandle_t ulOverlayHandle,
 			ETrackingUniverseOrigin eTrackingOrigin, const HmdMatrix34_t* pmatTrackingOriginToOverlayTransform,
-			const VROverlayProjection_t *pProjection, vr::EVREye eEye ) = 0;
+			const VROverlayProjection_t *pProjection, vr::EVREye eEye ) { return _table.SetOverlayTransformProjection(ulOverlayHandle, eTrackingOrigin, pmatTrackingOriginToOverlayTransform, pProjection, eEye); }
 
 		/** Shows the VR overlay.  For dashboard overlays, only the Dashboard Manager is allowed to call this. */
-		virtual EVROverlayError ShowOverlay( VROverlayHandle_t ulOverlayHandle ) = 0;
+		EVROverlayError ShowOverlay( VROverlayHandle_t ulOverlayHandle ) { return _table.ShowOverlay(ulOverlayHandle); }
 
 		/** Hides the VR overlay.  For dashboard overlays, only the Dashboard Manager is allowed to call this. */
-		virtual EVROverlayError HideOverlay( VROverlayHandle_t ulOverlayHandle ) = 0;
+		EVROverlayError HideOverlay( VROverlayHandle_t ulOverlayHandle ) { return _table.HideOverlay(ulOverlayHandle); }
 
 		/** Returns true if the overlay is visible. */
-		virtual bool IsOverlayVisible( VROverlayHandle_t ulOverlayHandle ) = 0;
+		bool IsOverlayVisible( VROverlayHandle_t ulOverlayHandle ) { return _table.IsOverlayVisible(ulOverlayHandle); }
 
 		/** Get the transform in 3d space associated with a specific 2d point in the overlay's coordinate space (where 0,0 is the lower left). -Z points out of the overlay */
-		virtual EVROverlayError GetTransformForOverlayCoordinates( VROverlayHandle_t ulOverlayHandle, ETrackingUniverseOrigin eTrackingOrigin, HmdVector2_t coordinatesInOverlay, HmdMatrix34_t *pmatTransform ) = 0;
+		EVROverlayError GetTransformForOverlayCoordinates( VROverlayHandle_t ulOverlayHandle, ETrackingUniverseOrigin eTrackingOrigin, HmdVector2_t coordinatesInOverlay, HmdMatrix34_t *pmatTransform ) { return _table.GetTransformForOverlayCoordinates(ulOverlayHandle, eTrackingOrigin, coordinatesInOverlay, pmatTransform); }
 
 		// ---------------------------------------------
 		// Overlay input methods
@@ -4019,46 +4329,46 @@ namespace vr
 
 		/** Returns true and fills the event with the next event on the overlay's event queue, if there is one.
 		* If there are no events this method returns false. uncbVREvent should be the size in bytes of the VREvent_t struct */
-		virtual bool PollNextOverlayEvent( VROverlayHandle_t ulOverlayHandle, VREvent_t *pEvent, uint32_t uncbVREvent ) = 0;
+		bool PollNextOverlayEvent( VROverlayHandle_t ulOverlayHandle, VREvent_t *pEvent, uint32_t uncbVREvent ) { return _table.PollNextOverlayEvent(ulOverlayHandle, pEvent, uncbVREvent); }
 
 		/** Returns the current input settings for the specified overlay. */
-		virtual EVROverlayError GetOverlayInputMethod( VROverlayHandle_t ulOverlayHandle, VROverlayInputMethod *peInputMethod ) = 0;
+		EVROverlayError GetOverlayInputMethod( VROverlayHandle_t ulOverlayHandle, VROverlayInputMethod *peInputMethod ) { return _table.GetOverlayInputMethod(ulOverlayHandle, peInputMethod); }
 
 		/** Sets the input settings for the specified overlay. */
-		virtual EVROverlayError SetOverlayInputMethod( VROverlayHandle_t ulOverlayHandle, VROverlayInputMethod eInputMethod ) = 0;
+		EVROverlayError SetOverlayInputMethod( VROverlayHandle_t ulOverlayHandle, VROverlayInputMethod eInputMethod ) { return _table.SetOverlayInputMethod(ulOverlayHandle, eInputMethod); }
 
 		/** Gets the mouse scaling factor that is used for mouse events. The actual texture may be a different size, but this is
 		* typically the size of the underlying UI in pixels. */
-		virtual EVROverlayError GetOverlayMouseScale( VROverlayHandle_t ulOverlayHandle, HmdVector2_t *pvecMouseScale ) = 0;
+		EVROverlayError GetOverlayMouseScale( VROverlayHandle_t ulOverlayHandle, HmdVector2_t *pvecMouseScale ) { return _table.GetOverlayMouseScale(ulOverlayHandle, pvecMouseScale); }
 
 		/** Sets the mouse scaling factor that is used for mouse events. The actual texture may be a different size, but this is
 		* typically the size of the underlying UI in pixels (not in world space). */
-		virtual EVROverlayError SetOverlayMouseScale( VROverlayHandle_t ulOverlayHandle, const HmdVector2_t *pvecMouseScale ) = 0;
+		EVROverlayError SetOverlayMouseScale( VROverlayHandle_t ulOverlayHandle, const HmdVector2_t *pvecMouseScale ) { return _table.SetOverlayMouseScale(ulOverlayHandle, pvecMouseScale); }
 
 		/** Computes the overlay-space pixel coordinates of where the ray intersects the overlay with the
 		* specified settings. Returns false if there is no intersection. */
-		virtual bool ComputeOverlayIntersection( VROverlayHandle_t ulOverlayHandle, const VROverlayIntersectionParams_t *pParams, VROverlayIntersectionResults_t *pResults ) = 0;
+		bool ComputeOverlayIntersection( VROverlayHandle_t ulOverlayHandle, const VROverlayIntersectionParams_t *pParams, VROverlayIntersectionResults_t *pResults ) { return _table.ComputeOverlayIntersection(ulOverlayHandle, pParams, pResults); }
 
 		/** Returns true if the specified overlay is the hover target. An overlay is the hover target when it is the last overlay "moused over"
 		* by the virtual mouse pointer */
-		virtual bool IsHoverTargetOverlay( VROverlayHandle_t ulOverlayHandle ) = 0;
+		bool IsHoverTargetOverlay( VROverlayHandle_t ulOverlayHandle ) { return _table.IsHoverTargetOverlay(ulOverlayHandle); }
 
 		/** Sets a list of primitives to be used for controller ray intersection
 		* typically the size of the underlying UI in pixels (not in world space). */
-		virtual EVROverlayError SetOverlayIntersectionMask( VROverlayHandle_t ulOverlayHandle, VROverlayIntersectionMaskPrimitive_t *pMaskPrimitives, uint32_t unNumMaskPrimitives, uint32_t unPrimitiveSize = sizeof( VROverlayIntersectionMaskPrimitive_t ) ) = 0;
+		EVROverlayError SetOverlayIntersectionMask( VROverlayHandle_t ulOverlayHandle, VROverlayIntersectionMaskPrimitive_t *pMaskPrimitives, uint32_t unNumMaskPrimitives, uint32_t unPrimitiveSize = sizeof( VROverlayIntersectionMaskPrimitive_t ) ) { return _table.SetOverlayIntersectionMask(ulOverlayHandle, pMaskPrimitives, unNumMaskPrimitives, unPrimitiveSize); }
 
 		/** Triggers a haptic event on the laser mouse controller for the specified overlay */
-		virtual EVROverlayError TriggerLaserMouseHapticVibration( VROverlayHandle_t ulOverlayHandle, float fDurationSeconds, float fFrequency, float fAmplitude ) = 0;
+		EVROverlayError TriggerLaserMouseHapticVibration( VROverlayHandle_t ulOverlayHandle, float fDurationSeconds, float fFrequency, float fAmplitude ) { return _table.TriggerLaserMouseHapticVibration(ulOverlayHandle, fDurationSeconds, fFrequency, fAmplitude); }
 
 		/** Sets the cursor to use for the specified overlay. This will be drawn instead of the generic blob when the laser mouse is pointed at the specified overlay */
-		virtual EVROverlayError SetOverlayCursor( VROverlayHandle_t ulOverlayHandle, VROverlayHandle_t ulCursorHandle ) = 0;
+		EVROverlayError SetOverlayCursor( VROverlayHandle_t ulOverlayHandle, VROverlayHandle_t ulCursorHandle ) { return _table.SetOverlayCursor(ulOverlayHandle, ulCursorHandle); }
 
 		/** Sets the override cursor position to use for this overlay in overlay mouse coordinates. This position will be used to draw the cursor
 		* instead of whatever the laser mouse cursor position is. */
-		virtual EVROverlayError SetOverlayCursorPositionOverride( VROverlayHandle_t ulOverlayHandle, const HmdVector2_t *pvCursor ) = 0;
+		EVROverlayError SetOverlayCursorPositionOverride( VROverlayHandle_t ulOverlayHandle, const HmdVector2_t *pvCursor ) { return _table.SetOverlayCursorPositionOverride(ulOverlayHandle, pvCursor); }
 
 		/** Clears the override cursor position for this overlay */
-		virtual EVROverlayError ClearOverlayCursorPositionOverride( VROverlayHandle_t ulOverlayHandle ) = 0;
+		EVROverlayError ClearOverlayCursorPositionOverride( VROverlayHandle_t ulOverlayHandle ) { return _table.ClearOverlayCursorPositionOverride(ulOverlayHandle); }
 
 		// ---------------------------------------------
 		// Overlay texture methods
@@ -4069,18 +4379,18 @@ namespace vr
 		* OpenGL dirty state:
 		*	glBindTexture
 		*/
-		virtual EVROverlayError SetOverlayTexture( VROverlayHandle_t ulOverlayHandle, const Texture_t *pTexture ) = 0;
+		EVROverlayError SetOverlayTexture( VROverlayHandle_t ulOverlayHandle, const Texture_t *pTexture ) { return _table.SetOverlayTexture(ulOverlayHandle, pTexture); }
 
 		/** Use this to tell the overlay system to release the texture set for this overlay. */
-		virtual EVROverlayError ClearOverlayTexture( VROverlayHandle_t ulOverlayHandle ) = 0;
+		EVROverlayError ClearOverlayTexture( VROverlayHandle_t ulOverlayHandle ) { return _table.ClearOverlayTexture(ulOverlayHandle); }
 
 		/** Separate interface for providing the data as a stream of bytes, but there is an upper bound on data
 		* that can be sent. This function can only be called by the overlay's renderer process. */
-		virtual EVROverlayError SetOverlayRaw( VROverlayHandle_t ulOverlayHandle, void *pvBuffer, uint32_t unWidth, uint32_t unHeight, uint32_t unBytesPerPixel ) = 0;
+		EVROverlayError SetOverlayRaw( VROverlayHandle_t ulOverlayHandle, void *pvBuffer, uint32_t unWidth, uint32_t unHeight, uint32_t unBytesPerPixel ) { return _table.SetOverlayRaw(ulOverlayHandle, pvBuffer, unWidth, unHeight, unBytesPerPixel); }
 
 		/** Separate interface for providing the image through a filename: can be png or jpg, and should not be bigger than 1920x1080.
 		* This function can only be called by the overlay's renderer process */
-		virtual EVROverlayError SetOverlayFromFile( VROverlayHandle_t ulOverlayHandle, const char *pchFilePath ) = 0;
+		EVROverlayError SetOverlayFromFile( VROverlayHandle_t ulOverlayHandle, const char *pchFilePath ) { return _table.SetOverlayFromFile(ulOverlayHandle, pchFilePath); }
 
 		/** Get the native texture handle/device for an overlay you have created.
 		* On windows this handle will be a ID3D11ShaderResourceView with a ID3D11Texture2D bound.
@@ -4092,40 +4402,40 @@ namespace vr
 		* pNativeTextureHandle is an OUTPUT, it will be a pointer to a ID3D11ShaderResourceView *.
 		* pNativeTextureRef is an INPUT and should be a ID3D11Resource *. The device used by pNativeTextureRef will be used to bind pNativeTextureHandle.
 		*/
-		virtual EVROverlayError GetOverlayTexture( VROverlayHandle_t ulOverlayHandle, void **pNativeTextureHandle, void *pNativeTextureRef, uint32_t *pWidth, uint32_t *pHeight, uint32_t *pNativeFormat, ETextureType *pAPIType, EColorSpace *pColorSpace, VRTextureBounds_t *pTextureBounds ) = 0;
+		EVROverlayError GetOverlayTexture( VROverlayHandle_t ulOverlayHandle, void **pNativeTextureHandle, void *pNativeTextureRef, uint32_t *pWidth, uint32_t *pHeight, uint32_t *pNativeFormat, ETextureType *pAPIType, EColorSpace *pColorSpace, VRTextureBounds_t *pTextureBounds ) { return _table.GetOverlayTexture(ulOverlayHandle, pNativeTextureHandle, pNativeTextureRef, pWidth, pHeight, pNativeFormat, pAPIType, pColorSpace, pTextureBounds); }
 
 		/** Release the pNativeTextureHandle provided from the GetOverlayTexture call, this allows the system to free the underlying GPU resources for this object,
 		* so only do it once you stop rendering this texture.
 		*/
-		virtual EVROverlayError ReleaseNativeOverlayHandle( VROverlayHandle_t ulOverlayHandle, void *pNativeTextureHandle ) = 0;
+		EVROverlayError ReleaseNativeOverlayHandle( VROverlayHandle_t ulOverlayHandle, void *pNativeTextureHandle ) { return _table.ReleaseNativeOverlayHandle(ulOverlayHandle, pNativeTextureHandle); }
 
 		/** Get the size of the overlay texture */
-		virtual EVROverlayError GetOverlayTextureSize( VROverlayHandle_t ulOverlayHandle, uint32_t *pWidth, uint32_t *pHeight ) = 0;
+		EVROverlayError GetOverlayTextureSize( VROverlayHandle_t ulOverlayHandle, uint32_t *pWidth, uint32_t *pHeight ) { return _table.GetOverlayTextureSize(ulOverlayHandle, pWidth, pHeight); }
 
 		// ----------------------------------------------
 		// Dashboard Overlay Methods
 		// ----------------------------------------------
 
 		/** Creates a dashboard overlay and returns its handle */
-		virtual EVROverlayError CreateDashboardOverlay( const char *pchOverlayKey, const char *pchOverlayFriendlyName, VROverlayHandle_t * pMainHandle, VROverlayHandle_t *pThumbnailHandle ) = 0;
+		EVROverlayError CreateDashboardOverlay( const char *pchOverlayKey, const char *pchOverlayFriendlyName, VROverlayHandle_t * pMainHandle, VROverlayHandle_t *pThumbnailHandle ) { return _table.CreateDashboardOverlay(pchOverlayKey, pchOverlayFriendlyName, pMainHandle, pThumbnailHandle); }
 
 		/** Returns true if the dashboard is visible */
-		virtual bool IsDashboardVisible() = 0;
+		bool IsDashboardVisible() { return _table.IsDashboardVisible(); }
 
 		/** returns true if the dashboard is visible and the specified overlay is the active system Overlay */
-		virtual bool IsActiveDashboardOverlay( VROverlayHandle_t ulOverlayHandle ) = 0;
+		bool IsActiveDashboardOverlay( VROverlayHandle_t ulOverlayHandle ) { return _table.IsActiveDashboardOverlay(ulOverlayHandle); }
 
 		/** Sets the dashboard overlay to only appear when the specified process ID has scene focus */
-		virtual EVROverlayError SetDashboardOverlaySceneProcess( VROverlayHandle_t ulOverlayHandle, uint32_t unProcessId ) = 0;
+		EVROverlayError SetDashboardOverlaySceneProcess( VROverlayHandle_t ulOverlayHandle, uint32_t unProcessId ) { return _table.SetDashboardOverlaySceneProcess(ulOverlayHandle, unProcessId); }
 
 		/** Gets the process ID that this dashboard overlay requires to have scene focus */
-		virtual EVROverlayError GetDashboardOverlaySceneProcess( VROverlayHandle_t ulOverlayHandle, uint32_t *punProcessId ) = 0;
+		EVROverlayError GetDashboardOverlaySceneProcess( VROverlayHandle_t ulOverlayHandle, uint32_t *punProcessId ) { return _table.GetDashboardOverlaySceneProcess(ulOverlayHandle, punProcessId); }
 
 		/** Shows the dashboard. */
-		virtual void ShowDashboard( const char *pchOverlayToShow ) = 0;
+		void ShowDashboard( const char *pchOverlayToShow ) { _table.ShowDashboard(pchOverlayToShow); }
 
 		/** Returns the tracked device that has the laser pointer in the dashboard */
-		virtual vr::TrackedDeviceIndex_t GetPrimaryDashboardDevice() = 0;
+		vr::TrackedDeviceIndex_t GetPrimaryDashboardDevice() { return _table.GetPrimaryDashboardDevice(); }
 
 		// ---------------------------------------------
 		// Keyboard methods
@@ -4133,39 +4443,39 @@ namespace vr
 
 		/** Show the virtual keyboard to accept input. In most cases, you should pass KeyboardFlag_Modal to enable modal overlay
 		* behavior on the keyboard itself. See EKeyboardFlags for more. */
-		virtual EVROverlayError ShowKeyboard( EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, uint32_t unFlags,
-			const char *pchDescription, uint32_t unCharMax, const char *pchExistingText, uint64_t uUserValue ) = 0;
+		EVROverlayError ShowKeyboard( EGamepadTextInputMode eInputMode, EGamepadTextInputLineMode eLineInputMode, uint32_t unFlags,
+			const char *pchDescription, uint32_t unCharMax, const char *pchExistingText, uint64_t uUserValue ) { return _table.ShowKeyboard(eInputMode, eLineInputMode, unFlags, pchDescription, unCharMax, pchExistingText, uUserValue); }
 
 		/** Show the virtual keyboard to accept input for an overlay. In most cases, you should pass KeyboardFlag_Modal to enable modal
 		* overlay behavior on the keyboard itself. See EKeyboardFlags for more. */
-		virtual EVROverlayError ShowKeyboardForOverlay( VROverlayHandle_t ulOverlayHandle, EGamepadTextInputMode eInputMode,
+		EVROverlayError ShowKeyboardForOverlay( VROverlayHandle_t ulOverlayHandle, EGamepadTextInputMode eInputMode,
 			EGamepadTextInputLineMode eLineInputMode, uint32_t unFlags, const char *pchDescription, uint32_t unCharMax,
-			const char *pchExistingText, uint64_t uUserValue ) = 0;
+			const char *pchExistingText, uint64_t uUserValue ) { return _table.ShowKeyboardForOverlay(ulOverlayHandle, eInputMode, eLineInputMode, unFlags, pchDescription, unCharMax, pchExistingText, uUserValue); }
 
 		/** Get the text that was entered into the text input **/
-		virtual uint32_t GetKeyboardText( VR_OUT_STRING() char *pchText, uint32_t cchText ) = 0;
+		uint32_t GetKeyboardText( VR_OUT_STRING() char *pchText, uint32_t cchText ) { return _table.GetKeyboardText(pchText, cchText); }
 
 		/** Hide the virtual keyboard **/
-		virtual void HideKeyboard() = 0;
+		void HideKeyboard() { _table.HideKeyboard(); }
 
 		/** Set the position of the keyboard in world space **/
-		virtual void SetKeyboardTransformAbsolute( ETrackingUniverseOrigin eTrackingOrigin, const HmdMatrix34_t *pmatTrackingOriginToKeyboardTransform ) = 0;
+		void SetKeyboardTransformAbsolute( ETrackingUniverseOrigin eTrackingOrigin, const HmdMatrix34_t *pmatTrackingOriginToKeyboardTransform ) { _table.SetKeyboardTransformAbsolute(eTrackingOrigin, pmatTrackingOriginToKeyboardTransform); }
 
 		/** Set the position of the keyboard in overlay space by telling it to avoid a rectangle in the overlay. Rectangle coords have (0,0) in the bottom left **/
-		virtual void SetKeyboardPositionForOverlay( VROverlayHandle_t ulOverlayHandle, HmdRect2_t avoidRect ) = 0;
+		void SetKeyboardPositionForOverlay( VROverlayHandle_t ulOverlayHandle, HmdRect2_t avoidRect ) { _table.SetKeyboardPositionForOverlay(ulOverlayHandle, avoidRect); }
 
 		// ---------------------------------------------
 		// Message box methods
 		// ---------------------------------------------
 
 		/** Show the message overlay. This will block and return you a result. **/
-		virtual VRMessageOverlayResponse ShowMessageOverlay( const char* pchText, const char* pchCaption, const char* pchButton0Text, const char* pchButton1Text = nullptr, const char* pchButton2Text = nullptr, const char* pchButton3Text = nullptr ) = 0;
+		VRMessageOverlayResponse ShowMessageOverlay( const char* pchText, const char* pchCaption, const char* pchButton0Text, const char* pchButton1Text = nullptr, const char* pchButton2Text = nullptr, const char* pchButton3Text = nullptr ) { return _table.ShowMessageOverlay(pchText, pchCaption, pchButton0Text, pchButton1Text, pchButton2Text, pchButton3Text); }
 
 		/** If the calling process owns the overlay and it's open, this will close it. **/
-		virtual void CloseMessageOverlay() = 0;
+		void CloseMessageOverlay() { _table.CloseMessageOverlay(); }
 	};
 
-	static const char * const IVROverlay_Version = "IVROverlay_025";
+	static const char * const IVROverlay_Version = "FnTable:IVROverlay_025";
 
 } // namespace vr
 
@@ -4202,8 +4512,17 @@ namespace vr
 		EDeviceType eType;
 	};
 
+	struct VR_IVROverlayView_FnTable
+	{
+		EVROverlayError (__stdcall *AcquireOverlayView)(VROverlayHandle_t ulOverlayHandle, VRNativeDevice_t *pNativeDevice, VROverlayView_t *pOverlayView, uint32_t unOverlayViewSize );
+		EVROverlayError (__stdcall *ReleaseOverlayView)(VROverlayView_t *pOverlayView);
+		void (__stdcall *PostOverlayEvent)(VROverlayHandle_t ulOverlayHandle, const VREvent_t *pvrEvent);
+		bool (__stdcall *IsViewingPermitted)( VROverlayHandle_t ulOverlayHandle );
+	};
+
 	class IVROverlayView
 	{
+		VR_IVROverlayView_FnTable _table;
 	public:
 		/** Acquire an OverlayView_t from an overlay handle
 		*
@@ -4223,7 +4542,7 @@ namespace vr
 		* will be nullptr. Once the producer generates the first overlay frame, Texture_t->handle
 		* will become a valid handle.
 		*/
-		virtual EVROverlayError AcquireOverlayView(VROverlayHandle_t ulOverlayHandle, VRNativeDevice_t *pNativeDevice, VROverlayView_t *pOverlayView, uint32_t unOverlayViewSize ) = 0;
+		EVROverlayError AcquireOverlayView(VROverlayHandle_t ulOverlayHandle, VRNativeDevice_t *pNativeDevice, VROverlayView_t *pOverlayView, uint32_t unOverlayViewSize ) { return _table.AcquireOverlayView(ulOverlayHandle, pNativeDevice, pOverlayView, unOverlayViewSize); }
 
 		/** Release an acquired OverlayView_t
 		*
@@ -4233,17 +4552,17 @@ namespace vr
 		* All OverlayView_t*'s provided to AcquireOverlayView() as pOverlayViews must be
 		* passed into ReleaseOverlayView() in order for the underlying GPU resources to be freed.
 		*/
-		virtual EVROverlayError ReleaseOverlayView(VROverlayView_t *pOverlayView) = 0;
+		EVROverlayError ReleaseOverlayView(VROverlayView_t *pOverlayView) { return _table.ReleaseOverlayView(pOverlayView); }
 
 		/** Posts an overlay event */
-		virtual void PostOverlayEvent(VROverlayHandle_t ulOverlayHandle, const VREvent_t *pvrEvent) = 0;
+		void PostOverlayEvent(VROverlayHandle_t ulOverlayHandle, const VREvent_t *pvrEvent) { _table.PostOverlayEvent(ulOverlayHandle, pvrEvent); }
 
 		/** Determines whether this process is permitted to view an overlay's content. */
-		virtual bool IsViewingPermitted( VROverlayHandle_t ulOverlayHandle ) = 0;
+		bool IsViewingPermitted( VROverlayHandle_t ulOverlayHandle ) { return _table.IsViewingPermitted(ulOverlayHandle); }
 
 	};
 
-	static const char * const IVROverlayView_Version = "IVROverlayView_003";
+	static const char * const IVROverlayView_Version = "FnTable:IVROverlayView_003";
 
 }
 
@@ -4346,8 +4665,32 @@ struct RenderModel_ControllerMode_State_t
 
 #pragma pack( pop )
 
+struct VR_IVRRenderModels_FnTable
+{
+	EVRRenderModelError (__stdcall *LoadRenderModel_Async)( const char *pchRenderModelName, RenderModel_t **ppRenderModel );
+	void (__stdcall *FreeRenderModel)( RenderModel_t *pRenderModel );
+	EVRRenderModelError (__stdcall *LoadTexture_Async)( TextureID_t textureId, RenderModel_TextureMap_t **ppTexture );
+	void (__stdcall *FreeTexture)( RenderModel_TextureMap_t *pTexture );
+	EVRRenderModelError (__stdcall *LoadTextureD3D11_Async)( TextureID_t textureId, void *pD3D11Device, void **ppD3D11Texture2D );
+	EVRRenderModelError (__stdcall *LoadIntoTextureD3D11_Async)( TextureID_t textureId, void *pDstTexture );
+	void (__stdcall *FreeTextureD3D11)( void *pD3D11Texture2D );
+	uint32_t (__stdcall *GetRenderModelName)( uint32_t unRenderModelIndex,  char *pchRenderModelName, uint32_t unRenderModelNameLen );
+	uint32_t (__stdcall *GetRenderModelCount)();
+	uint32_t (__stdcall *GetComponentCount)( const char *pchRenderModelName );
+	uint32_t (__stdcall *GetComponentName)( const char *pchRenderModelName, uint32_t unComponentIndex,  char *pchComponentName, uint32_t unComponentNameLen );
+	uint64_t (__stdcall *GetComponentButtonMask)( const char *pchRenderModelName, const char *pchComponentName );
+	uint32_t (__stdcall *GetComponentRenderModelName)( const char *pchRenderModelName, const char *pchComponentName,  char *pchComponentRenderModelName, uint32_t unComponentRenderModelNameLen );
+	bool (__stdcall *GetComponentStateForDevicePath)( const char *pchRenderModelName, const char *pchComponentName, vr::VRInputValueHandle_t devicePath, const vr::RenderModel_ControllerMode_State_t *pState, vr::RenderModel_ComponentState_t *pComponentState );
+	bool (__stdcall *GetComponentState)( const char *pchRenderModelName, const char *pchComponentName, const vr::VRControllerState_t *pControllerState, const RenderModel_ControllerMode_State_t *pState, RenderModel_ComponentState_t *pComponentState );
+	bool (__stdcall *RenderModelHasComponent)( const char *pchRenderModelName, const char *pchComponentName );
+	uint32_t (__stdcall *GetRenderModelThumbnailURL)( const char *pchRenderModelName,  char *pchThumbnailURL, uint32_t unThumbnailURLLen, vr::EVRRenderModelError *peError );
+	uint32_t (__stdcall *GetRenderModelOriginalPath)( const char *pchRenderModelName,  char *pchOriginalPath, uint32_t unOriginalPathLen, vr::EVRRenderModelError *peError );
+	const char *(__stdcall *GetRenderModelErrorNameFromEnum)( vr::EVRRenderModelError error );
+};
+
 class IVRRenderModels
 {
+	VR_IVRRenderModels_FnTable _table;
 public:
 
 	/** Loads and returns a render model for use in the application. pchRenderModelName should be a render model name
@@ -4359,35 +4702,35 @@ public:
 	*
 	* The method returns VRRenderModelError_Loading while the render model is still being loaded.
 	* The method returns VRRenderModelError_None once loaded successfully, otherwise will return an error. */
-	virtual EVRRenderModelError LoadRenderModel_Async( const char *pchRenderModelName, RenderModel_t **ppRenderModel ) = 0;
+	EVRRenderModelError LoadRenderModel_Async( const char *pchRenderModelName, RenderModel_t **ppRenderModel ) { return _table.LoadRenderModel_Async(pchRenderModelName, ppRenderModel); }
 
 	/** Frees a previously returned render model
 	*   It is safe to call this on a null ptr. */
-	virtual void FreeRenderModel( RenderModel_t *pRenderModel ) = 0;
+	void FreeRenderModel( RenderModel_t *pRenderModel ) { _table.FreeRenderModel(pRenderModel); }
 
 	/** Loads and returns a texture for use in the application. */
-	virtual EVRRenderModelError LoadTexture_Async( TextureID_t textureId, RenderModel_TextureMap_t **ppTexture ) = 0;
+	EVRRenderModelError LoadTexture_Async( TextureID_t textureId, RenderModel_TextureMap_t **ppTexture ) { return _table.LoadTexture_Async(textureId, ppTexture); }
 
 	/** Frees a previously returned texture
 	*   It is safe to call this on a null ptr. */
-	virtual void FreeTexture( RenderModel_TextureMap_t *pTexture ) = 0;
+	void FreeTexture( RenderModel_TextureMap_t *pTexture ) { _table.FreeTexture(pTexture); }
 
 	/** Creates a D3D11 texture and loads data into it. */
-	virtual EVRRenderModelError LoadTextureD3D11_Async( TextureID_t textureId, void *pD3D11Device, void **ppD3D11Texture2D ) = 0;
+	EVRRenderModelError LoadTextureD3D11_Async( TextureID_t textureId, void *pD3D11Device, void **ppD3D11Texture2D ) { return _table.LoadTextureD3D11_Async(textureId, pD3D11Device, ppD3D11Texture2D); }
 
 	/** Helper function to copy the bits into an existing texture. */
-	virtual EVRRenderModelError LoadIntoTextureD3D11_Async( TextureID_t textureId, void *pDstTexture ) = 0;
+	EVRRenderModelError LoadIntoTextureD3D11_Async( TextureID_t textureId, void *pDstTexture ) { return _table.LoadIntoTextureD3D11_Async(textureId, pDstTexture); }
 
 	/** Use this to free textures created with LoadTextureD3D11_Async instead of calling Release on them. */
-	virtual void FreeTextureD3D11( void *pD3D11Texture2D ) = 0;
+	void FreeTextureD3D11( void *pD3D11Texture2D ) { _table.FreeTextureD3D11(pD3D11Texture2D); }
 
 	/** Use this to get the names of available render models.  Index does not correlate to a tracked device index, but
 	* is only used for iterating over all available render models.  If the index is out of range, this function will return 0.
 	* Otherwise, it will return the size of the buffer required for the name. */
-	virtual uint32_t GetRenderModelName( uint32_t unRenderModelIndex, VR_OUT_STRING() char *pchRenderModelName, uint32_t unRenderModelNameLen ) = 0;
+	uint32_t GetRenderModelName( uint32_t unRenderModelIndex, VR_OUT_STRING() char *pchRenderModelName, uint32_t unRenderModelNameLen ) { return _table.GetRenderModelName(unRenderModelIndex, pchRenderModelName, unRenderModelNameLen); }
 
 	/** Returns the number of available render models. */
-	virtual uint32_t GetRenderModelCount() = 0;
+	uint32_t GetRenderModelCount() { return _table.GetRenderModelCount(); }
 
 
 	/** Returns the number of components of the specified render model.
@@ -4397,23 +4740,23 @@ public:
 	*   non-renderable things which include coordinate systems such as 'tip', 'base', a neutral controller agnostic hand-pose
 	*   If all controller components are enumerated and rendered, it will be equivalent to drawing the traditional render model
 	*   Returns 0 if components not supported, >0 otherwise */
-	virtual uint32_t GetComponentCount( const char *pchRenderModelName ) = 0;
+	uint32_t GetComponentCount( const char *pchRenderModelName ) { return _table.GetComponentCount(pchRenderModelName); }
 
 	/** Use this to get the names of available components.  Index does not correlate to a tracked device index, but
 	* is only used for iterating over all available components.  If the index is out of range, this function will return 0.
 	* Otherwise, it will return the size of the buffer required for the name. */
-	virtual uint32_t GetComponentName( const char *pchRenderModelName, uint32_t unComponentIndex, VR_OUT_STRING( ) char *pchComponentName, uint32_t unComponentNameLen ) = 0;
+	uint32_t GetComponentName( const char *pchRenderModelName, uint32_t unComponentIndex, VR_OUT_STRING( ) char *pchComponentName, uint32_t unComponentNameLen ) { return _table.GetComponentName(pchRenderModelName, unComponentIndex, pchComponentName, unComponentNameLen); }
 
 	/** Get the button mask for all buttons associated with this component
 	*   If no buttons (or axes) are associated with this component, return 0
 	*   Note: multiple components may be associated with the same button. Ex: two grip buttons on a single controller.
 	*   Note: A single component may be associated with multiple buttons. Ex: A trackpad which also provides "D-pad" functionality */
-	virtual uint64_t GetComponentButtonMask( const char *pchRenderModelName, const char *pchComponentName ) = 0;
+	uint64_t GetComponentButtonMask( const char *pchRenderModelName, const char *pchComponentName ) { return _table.GetComponentButtonMask(pchRenderModelName, pchComponentName); }
 
 	/** Use this to get the render model name for the specified rendermode/component combination, to be passed to LoadRenderModel.
 	* If the component name is out of range, this function will return 0.
 	* Otherwise, it will return the size of the buffer required for the name. */
-	virtual uint32_t GetComponentRenderModelName( const char *pchRenderModelName, const char *pchComponentName, VR_OUT_STRING( ) char *pchComponentRenderModelName, uint32_t unComponentRenderModelNameLen ) = 0;
+	uint32_t GetComponentRenderModelName( const char *pchRenderModelName, const char *pchComponentName, VR_OUT_STRING( ) char *pchComponentRenderModelName, uint32_t unComponentRenderModelNameLen ) { return _table.GetComponentRenderModelName(pchRenderModelName, pchComponentName, pchComponentRenderModelName, unComponentRenderModelNameLen); }
 
 	/** Use this to query information about the component, as a function of the controller state.
 	*
@@ -4423,27 +4766,27 @@ public:
 	* If the pchRenderModelName or pchComponentName is invalid, this will return false (and transforms will be set to identity).
 	* Otherwise, return true
 	* Note: For dynamic objects, visibility may be dynamic. (I.e., true/false will be returned based on controller state and controller mode state ) */
-	virtual bool GetComponentStateForDevicePath( const char *pchRenderModelName, const char *pchComponentName, vr::VRInputValueHandle_t devicePath, const vr::RenderModel_ControllerMode_State_t *pState, vr::RenderModel_ComponentState_t *pComponentState ) = 0;
+	bool GetComponentStateForDevicePath( const char *pchRenderModelName, const char *pchComponentName, vr::VRInputValueHandle_t devicePath, const vr::RenderModel_ControllerMode_State_t *pState, vr::RenderModel_ComponentState_t *pComponentState ) { return _table.GetComponentStateForDevicePath(pchRenderModelName, pchComponentName, devicePath, pState, pComponentState); }
 
 	/** This version of GetComponentState takes a controller state block instead of an action origin. This function is deprecated. You should use the new input system and GetComponentStateForDevicePath instead. */
-	virtual bool GetComponentState( const char *pchRenderModelName, const char *pchComponentName, const vr::VRControllerState_t *pControllerState, const RenderModel_ControllerMode_State_t *pState, RenderModel_ComponentState_t *pComponentState ) = 0;
+	bool GetComponentState( const char *pchRenderModelName, const char *pchComponentName, const vr::VRControllerState_t *pControllerState, const RenderModel_ControllerMode_State_t *pState, RenderModel_ComponentState_t *pComponentState ) { return _table.GetComponentState(pchRenderModelName, pchComponentName, pControllerState, pState, pComponentState); }
 
 	/** Returns true if the render model has a component with the specified name */
-	virtual bool RenderModelHasComponent( const char *pchRenderModelName, const char *pchComponentName ) = 0;
+	bool RenderModelHasComponent( const char *pchRenderModelName, const char *pchComponentName ) { return _table.RenderModelHasComponent(pchRenderModelName, pchComponentName); }
 
 	/** Returns the URL of the thumbnail image for this rendermodel */
-	virtual uint32_t GetRenderModelThumbnailURL( const char *pchRenderModelName, VR_OUT_STRING() char *pchThumbnailURL, uint32_t unThumbnailURLLen, vr::EVRRenderModelError *peError ) = 0;
+	uint32_t GetRenderModelThumbnailURL( const char *pchRenderModelName, VR_OUT_STRING() char *pchThumbnailURL, uint32_t unThumbnailURLLen, vr::EVRRenderModelError *peError ) { return _table.GetRenderModelThumbnailURL(pchRenderModelName, pchThumbnailURL, unThumbnailURLLen, peError); }
 
 	/** Provides a render model path that will load the unskinned model if the model name provided has been replace by the user. If the model
 	* hasn't been replaced the path value will still be a valid path to load the model. Pass this to LoadRenderModel_Async, etc. to load the
 	* model. */
-	virtual uint32_t GetRenderModelOriginalPath( const char *pchRenderModelName, VR_OUT_STRING() char *pchOriginalPath, uint32_t unOriginalPathLen, vr::EVRRenderModelError *peError ) = 0;
+	uint32_t GetRenderModelOriginalPath( const char *pchRenderModelName, VR_OUT_STRING() char *pchOriginalPath, uint32_t unOriginalPathLen, vr::EVRRenderModelError *peError ) { return _table.GetRenderModelOriginalPath(pchRenderModelName, pchOriginalPath, unOriginalPathLen, peError); }
 
 	/** Returns a string for a render model error */
-	virtual const char *GetRenderModelErrorNameFromEnum( vr::EVRRenderModelError error ) = 0;
+	const char *GetRenderModelErrorNameFromEnum( vr::EVRRenderModelError error ) { return _table.GetRenderModelErrorNameFromEnum(error); }
 };
 
-static const char * const IVRRenderModels_Version = "IVRRenderModels_006";
+static const char * const IVRRenderModels_Version = "FnTable:IVRRenderModels_006";
 
 }
 
@@ -4455,25 +4798,33 @@ namespace vr
 
 	/** NOTE: Use of this interface is not recommended in production applications. It will not work for displays which use
 	* direct-to-display mode. Creating our own window is also incompatible with the VR compositor and is not available when the compositor is running. */
+	struct VR_IVRExtendedDisplay_FnTable
+	{
+		void (__stdcall *GetWindowBounds)( int32_t *pnX, int32_t *pnY, uint32_t *pnWidth, uint32_t *pnHeight );
+		void (__stdcall *GetEyeOutputViewport)( EVREye eEye, uint32_t *pnX, uint32_t *pnY, uint32_t *pnWidth, uint32_t *pnHeight );
+		void (__stdcall *GetDXGIOutputInfo)( int32_t *pnAdapterIndex, int32_t *pnAdapterOutputIndex );
+	};
+
 	class IVRExtendedDisplay
 	{
+		VR_IVRExtendedDisplay_FnTable _table;
 	public:
 
 		/** Size and position that the window needs to be on the VR display. */
-		virtual void GetWindowBounds( int32_t *pnX, int32_t *pnY, uint32_t *pnWidth, uint32_t *pnHeight ) = 0;
+		void GetWindowBounds( int32_t *pnX, int32_t *pnY, uint32_t *pnWidth, uint32_t *pnHeight ) { _table.GetWindowBounds(pnX, pnY, pnWidth, pnHeight); }
 
 		/** Gets the viewport in the frame buffer to draw the output of the distortion into */
-		virtual void GetEyeOutputViewport( EVREye eEye, uint32_t *pnX, uint32_t *pnY, uint32_t *pnWidth, uint32_t *pnHeight ) = 0;
+		void GetEyeOutputViewport( EVREye eEye, uint32_t *pnX, uint32_t *pnY, uint32_t *pnWidth, uint32_t *pnHeight ) { _table.GetEyeOutputViewport(eEye, pnX, pnY, pnWidth, pnHeight); }
 
 		/** [D3D10/11 Only]
 		* Returns the adapter index and output index that the user should pass into EnumAdapters and EnumOutputs
 		* to create the device and swap chain in DX10 and DX11. If an error occurs both indices will be set to -1.
 		*/
-		virtual void GetDXGIOutputInfo( int32_t *pnAdapterIndex, int32_t *pnAdapterOutputIndex ) = 0;
+		void GetDXGIOutputInfo( int32_t *pnAdapterIndex, int32_t *pnAdapterOutputIndex ) { _table.GetDXGIOutputInfo(pnAdapterIndex, pnAdapterOutputIndex); }
 
 	};
 
-	static const char * const IVRExtendedDisplay_Version = "IVRExtendedDisplay_001";
+	static const char * const IVRExtendedDisplay_Version = "FnTable:IVRExtendedDisplay_001";
 
 }
 
@@ -4483,38 +4834,57 @@ namespace vr
 namespace vr
 {
 
+struct VR_IVRTrackedCamera_FnTable
+{
+	const char *(__stdcall *GetCameraErrorNameFromEnum)( vr::EVRTrackedCameraError eCameraError );
+	vr::EVRTrackedCameraError (__stdcall *HasCamera)( vr::TrackedDeviceIndex_t nDeviceIndex, bool *pHasCamera );
+	vr::EVRTrackedCameraError (__stdcall *GetCameraFrameSize)( vr::TrackedDeviceIndex_t nDeviceIndex, vr::EVRTrackedCameraFrameType eFrameType, uint32_t *pnWidth, uint32_t *pnHeight, uint32_t *pnFrameBufferSize );
+	vr::EVRTrackedCameraError (__stdcall *GetCameraIntrinsics)( vr::TrackedDeviceIndex_t nDeviceIndex, uint32_t nCameraIndex, vr::EVRTrackedCameraFrameType eFrameType, vr::HmdVector2_t *pFocalLength, vr::HmdVector2_t *pCenter );
+	vr::EVRTrackedCameraError (__stdcall *GetCameraProjection)( vr::TrackedDeviceIndex_t nDeviceIndex, uint32_t nCameraIndex, vr::EVRTrackedCameraFrameType eFrameType, float flZNear, float flZFar, vr::HmdMatrix44_t *pProjection );
+	vr::EVRTrackedCameraError (__stdcall *AcquireVideoStreamingService)( vr::TrackedDeviceIndex_t nDeviceIndex, vr::TrackedCameraHandle_t *pHandle );
+	vr::EVRTrackedCameraError (__stdcall *ReleaseVideoStreamingService)( vr::TrackedCameraHandle_t hTrackedCamera );
+	vr::EVRTrackedCameraError (__stdcall *GetVideoStreamFrameBuffer)( vr::TrackedCameraHandle_t hTrackedCamera, vr::EVRTrackedCameraFrameType eFrameType, void *pFrameBuffer, uint32_t nFrameBufferSize, vr::CameraVideoStreamFrameHeader_t *pFrameHeader, uint32_t nFrameHeaderSize );
+	vr::EVRTrackedCameraError (__stdcall *GetVideoStreamTextureSize)( vr::TrackedDeviceIndex_t nDeviceIndex, vr::EVRTrackedCameraFrameType eFrameType, vr::VRTextureBounds_t *pTextureBounds, uint32_t *pnWidth, uint32_t *pnHeight );
+	vr::EVRTrackedCameraError (__stdcall *GetVideoStreamTextureD3D11)( vr::TrackedCameraHandle_t hTrackedCamera, vr::EVRTrackedCameraFrameType eFrameType, void *pD3D11DeviceOrResource, void **ppD3D11ShaderResourceView, vr::CameraVideoStreamFrameHeader_t *pFrameHeader, uint32_t nFrameHeaderSize );
+	vr::EVRTrackedCameraError (__stdcall *GetVideoStreamTextureGL)( vr::TrackedCameraHandle_t hTrackedCamera, vr::EVRTrackedCameraFrameType eFrameType, vr::glUInt_t *pglTextureId, vr::CameraVideoStreamFrameHeader_t *pFrameHeader, uint32_t nFrameHeaderSize );
+	vr::EVRTrackedCameraError (__stdcall *ReleaseVideoStreamTextureGL)( vr::TrackedCameraHandle_t hTrackedCamera, vr::glUInt_t glTextureId );
+	void (__stdcall *SetCameraTrackingSpace)( vr::ETrackingUniverseOrigin eUniverse );
+	vr::ETrackingUniverseOrigin (__stdcall *GetCameraTrackingSpace)( );
+};
+
 class IVRTrackedCamera
 {
+	VR_IVRTrackedCamera_FnTable _table;
 public:
 	/** Returns a string for an error */
-	virtual const char *GetCameraErrorNameFromEnum( vr::EVRTrackedCameraError eCameraError ) = 0;
+	const char *GetCameraErrorNameFromEnum( vr::EVRTrackedCameraError eCameraError ) { return _table.GetCameraErrorNameFromEnum(eCameraError); }
 
 	/** For convenience, same as tracked property request Prop_HasCamera_Bool */
-	virtual vr::EVRTrackedCameraError HasCamera( vr::TrackedDeviceIndex_t nDeviceIndex, bool *pHasCamera ) = 0;
+	vr::EVRTrackedCameraError HasCamera( vr::TrackedDeviceIndex_t nDeviceIndex, bool *pHasCamera ) { return _table.HasCamera(nDeviceIndex, pHasCamera); }
 
 	/** Gets size of the image frame. */
-	virtual vr::EVRTrackedCameraError GetCameraFrameSize( vr::TrackedDeviceIndex_t nDeviceIndex, vr::EVRTrackedCameraFrameType eFrameType, uint32_t *pnWidth, uint32_t *pnHeight, uint32_t *pnFrameBufferSize ) = 0;
+	vr::EVRTrackedCameraError GetCameraFrameSize( vr::TrackedDeviceIndex_t nDeviceIndex, vr::EVRTrackedCameraFrameType eFrameType, uint32_t *pnWidth, uint32_t *pnHeight, uint32_t *pnFrameBufferSize ) { return _table.GetCameraFrameSize(nDeviceIndex, eFrameType, pnWidth, pnHeight, pnFrameBufferSize); }
 
-	virtual vr::EVRTrackedCameraError GetCameraIntrinsics( vr::TrackedDeviceIndex_t nDeviceIndex, uint32_t nCameraIndex, vr::EVRTrackedCameraFrameType eFrameType, vr::HmdVector2_t *pFocalLength, vr::HmdVector2_t *pCenter ) = 0;
+	vr::EVRTrackedCameraError GetCameraIntrinsics( vr::TrackedDeviceIndex_t nDeviceIndex, uint32_t nCameraIndex, vr::EVRTrackedCameraFrameType eFrameType, vr::HmdVector2_t *pFocalLength, vr::HmdVector2_t *pCenter ) { return _table.GetCameraIntrinsics(nDeviceIndex, nCameraIndex, eFrameType, pFocalLength, pCenter); }
 
-	virtual vr::EVRTrackedCameraError GetCameraProjection( vr::TrackedDeviceIndex_t nDeviceIndex, uint32_t nCameraIndex, vr::EVRTrackedCameraFrameType eFrameType, float flZNear, float flZFar, vr::HmdMatrix44_t *pProjection ) = 0;
+	vr::EVRTrackedCameraError GetCameraProjection( vr::TrackedDeviceIndex_t nDeviceIndex, uint32_t nCameraIndex, vr::EVRTrackedCameraFrameType eFrameType, float flZNear, float flZFar, vr::HmdMatrix44_t *pProjection ) { return _table.GetCameraProjection(nDeviceIndex, nCameraIndex, eFrameType, flZNear, flZFar, pProjection); }
 
 	/** Acquiring streaming service permits video streaming for the caller. Releasing hints the system that video services do not need to be maintained for this client.
 	* If the camera has not already been activated, a one time spin up may incur some auto exposure as well as initial streaming frame delays.
 	* The camera should be considered a global resource accessible for shared consumption but not exclusive to any caller.
 	* The camera may go inactive due to lack of active consumers or headset idleness. */
-	virtual vr::EVRTrackedCameraError AcquireVideoStreamingService( vr::TrackedDeviceIndex_t nDeviceIndex, vr::TrackedCameraHandle_t *pHandle ) = 0;
-	virtual vr::EVRTrackedCameraError ReleaseVideoStreamingService( vr::TrackedCameraHandle_t hTrackedCamera ) = 0;
+	vr::EVRTrackedCameraError AcquireVideoStreamingService( vr::TrackedDeviceIndex_t nDeviceIndex, vr::TrackedCameraHandle_t *pHandle ) { return _table.AcquireVideoStreamingService(nDeviceIndex, pHandle); }
+	vr::EVRTrackedCameraError ReleaseVideoStreamingService( vr::TrackedCameraHandle_t hTrackedCamera ) { return _table.ReleaseVideoStreamingService(hTrackedCamera); }
 
 	/** Copies the image frame into a caller's provided buffer. The image data is currently provided as RGBA data, 4 bytes per pixel.
 	* A caller can provide null for the framebuffer or frameheader if not desired. Requesting the frame header first, followed by the frame buffer allows
 	* the caller to determine if the frame as advanced per the frame header sequence.
 	* If there is no frame available yet, due to initial camera spinup or re-activation, the error will be VRTrackedCameraError_NoFrameAvailable.
 	* Ideally a caller should be polling at ~16ms intervals */
-	virtual vr::EVRTrackedCameraError GetVideoStreamFrameBuffer( vr::TrackedCameraHandle_t hTrackedCamera, vr::EVRTrackedCameraFrameType eFrameType, void *pFrameBuffer, uint32_t nFrameBufferSize, vr::CameraVideoStreamFrameHeader_t *pFrameHeader, uint32_t nFrameHeaderSize ) = 0;
+	vr::EVRTrackedCameraError GetVideoStreamFrameBuffer( vr::TrackedCameraHandle_t hTrackedCamera, vr::EVRTrackedCameraFrameType eFrameType, void *pFrameBuffer, uint32_t nFrameBufferSize, vr::CameraVideoStreamFrameHeader_t *pFrameHeader, uint32_t nFrameHeaderSize ) { return _table.GetVideoStreamFrameBuffer(hTrackedCamera, eFrameType, pFrameBuffer, nFrameBufferSize, pFrameHeader, nFrameHeaderSize); }
 
 	/** Gets size of the image frame. */
-	virtual vr::EVRTrackedCameraError GetVideoStreamTextureSize( vr::TrackedDeviceIndex_t nDeviceIndex, vr::EVRTrackedCameraFrameType eFrameType, vr::VRTextureBounds_t *pTextureBounds, uint32_t *pnWidth, uint32_t *pnHeight ) = 0;
+	vr::EVRTrackedCameraError GetVideoStreamTextureSize( vr::TrackedDeviceIndex_t nDeviceIndex, vr::EVRTrackedCameraFrameType eFrameType, vr::VRTextureBounds_t *pTextureBounds, uint32_t *pnWidth, uint32_t *pnHeight ) { return _table.GetVideoStreamTextureSize(nDeviceIndex, eFrameType, pTextureBounds, pnWidth, pnHeight); }
 
 	/** Access a shared D3D11 texture for the specified tracked camera stream.
 	* The camera frame type VRTrackedCameraFrameType_Undistorted is not supported directly as a shared texture. It is an interior subregion of the shared texture VRTrackedCameraFrameType_MaximumUndistorted.
@@ -4522,16 +4892,16 @@ public:
 	* VRTrackedCameraFrameType_MaximumUndistorted to provide the texture. The VRTrackedCameraFrameType_MaximumUndistorted will yield an image where the invalid regions are decoded
 	* by the alpha channel having a zero component. The valid regions all have a non-zero alpha component. The subregion as described by VRTrackedCameraFrameType_Undistorted
 	* guarantees a rectangle where all pixels are valid. */
-	virtual vr::EVRTrackedCameraError GetVideoStreamTextureD3D11( vr::TrackedCameraHandle_t hTrackedCamera, vr::EVRTrackedCameraFrameType eFrameType, void *pD3D11DeviceOrResource, void **ppD3D11ShaderResourceView, vr::CameraVideoStreamFrameHeader_t *pFrameHeader, uint32_t nFrameHeaderSize ) = 0;
+	vr::EVRTrackedCameraError GetVideoStreamTextureD3D11( vr::TrackedCameraHandle_t hTrackedCamera, vr::EVRTrackedCameraFrameType eFrameType, void *pD3D11DeviceOrResource, void **ppD3D11ShaderResourceView, vr::CameraVideoStreamFrameHeader_t *pFrameHeader, uint32_t nFrameHeaderSize ) { return _table.GetVideoStreamTextureD3D11(hTrackedCamera, eFrameType, pD3D11DeviceOrResource, ppD3D11ShaderResourceView, pFrameHeader, nFrameHeaderSize); }
 
 	/** Access a shared GL texture for the specified tracked camera stream */
-	virtual vr::EVRTrackedCameraError GetVideoStreamTextureGL( vr::TrackedCameraHandle_t hTrackedCamera, vr::EVRTrackedCameraFrameType eFrameType, vr::glUInt_t *pglTextureId, vr::CameraVideoStreamFrameHeader_t *pFrameHeader, uint32_t nFrameHeaderSize ) = 0;
-	virtual vr::EVRTrackedCameraError ReleaseVideoStreamTextureGL( vr::TrackedCameraHandle_t hTrackedCamera, vr::glUInt_t glTextureId ) = 0;
-	virtual void SetCameraTrackingSpace( vr::ETrackingUniverseOrigin eUniverse ) = 0;
-	virtual vr::ETrackingUniverseOrigin GetCameraTrackingSpace( ) = 0;
+	vr::EVRTrackedCameraError GetVideoStreamTextureGL( vr::TrackedCameraHandle_t hTrackedCamera, vr::EVRTrackedCameraFrameType eFrameType, vr::glUInt_t *pglTextureId, vr::CameraVideoStreamFrameHeader_t *pFrameHeader, uint32_t nFrameHeaderSize ) { return _table.GetVideoStreamTextureGL(hTrackedCamera, eFrameType, pglTextureId, pFrameHeader, nFrameHeaderSize); }
+	vr::EVRTrackedCameraError ReleaseVideoStreamTextureGL( vr::TrackedCameraHandle_t hTrackedCamera, vr::glUInt_t glTextureId ) { return _table.ReleaseVideoStreamTextureGL(hTrackedCamera, glTextureId); }
+	void SetCameraTrackingSpace( vr::ETrackingUniverseOrigin eUniverse ) { _table.SetCameraTrackingSpace(eUniverse); }
+	vr::ETrackingUniverseOrigin GetCameraTrackingSpace( ) { return _table.GetCameraTrackingSpace(); }
 };
 
-static const char * const IVRTrackedCamera_Version = "IVRTrackedCamera_006";
+static const char * const IVRTrackedCamera_Version = "FnTable:IVRTrackedCamera_006";
 
 } // namespace vr
 
@@ -4553,8 +4923,20 @@ enum EVRScreenshotError
 };
 
 /** Allows the application to generate screenshots */
+struct VR_IVRScreenshots_FnTable
+{
+	vr::EVRScreenshotError (__stdcall *RequestScreenshot)( vr::ScreenshotHandle_t *pOutScreenshotHandle, vr::EVRScreenshotType type, const char *pchPreviewFilename, const char *pchVRFilename );
+	vr::EVRScreenshotError (__stdcall *HookScreenshot)(  const vr::EVRScreenshotType *pSupportedTypes, int numTypes );
+	vr::EVRScreenshotType (__stdcall *GetScreenshotPropertyType)( vr::ScreenshotHandle_t screenshotHandle, vr::EVRScreenshotError *pError );
+	uint32_t (__stdcall *GetScreenshotPropertyFilename)( vr::ScreenshotHandle_t screenshotHandle, vr::EVRScreenshotPropertyFilenames filenameType,  char *pchFilename, uint32_t cchFilename, vr::EVRScreenshotError *pError );
+	vr::EVRScreenshotError (__stdcall *UpdateScreenshotProgress)( vr::ScreenshotHandle_t screenshotHandle, float flProgress );
+	vr::EVRScreenshotError (__stdcall *TakeStereoScreenshot)( vr::ScreenshotHandle_t *pOutScreenshotHandle, const char *pchPreviewFilename, const char *pchVRFilename );
+	vr::EVRScreenshotError (__stdcall *SubmitScreenshot)( vr::ScreenshotHandle_t screenshotHandle, vr::EVRScreenshotType type, const char *pchSourcePreviewFilename, const char *pchSourceVRFilename );
+};
+
 class IVRScreenshots
 {
+	VR_IVRScreenshots_FnTable _table;
 public:
 	/** Request a screenshot of the requested type.
 	 *  A request of the VRScreenshotType_Stereo type will always
@@ -4587,7 +4969,7 @@ public:
 	 *  The destination file names do not need an extension,
 	 *  will be replaced with the correct one for the format
 	 *  which is currently .png. */
-	virtual vr::EVRScreenshotError RequestScreenshot( vr::ScreenshotHandle_t *pOutScreenshotHandle, vr::EVRScreenshotType type, const char *pchPreviewFilename, const char *pchVRFilename ) = 0;
+	vr::EVRScreenshotError RequestScreenshot( vr::ScreenshotHandle_t *pOutScreenshotHandle, vr::EVRScreenshotType type, const char *pchPreviewFilename, const char *pchVRFilename ) { return _table.RequestScreenshot(pOutScreenshotHandle, type, pchPreviewFilename, pchVRFilename); }
 
 	/** Called by the running VR application to indicate that it
 	 *  wishes to be in charge of screenshots.  If the
@@ -4597,23 +4979,23 @@ public:
 	 *  Once hooked your application will receive a
 	 *  VREvent_RequestScreenshot event when the user presses the
 	 *  buttons to take a screenshot. */
-	virtual vr::EVRScreenshotError HookScreenshot( VR_ARRAY_COUNT( numTypes ) const vr::EVRScreenshotType *pSupportedTypes, int numTypes ) = 0;
+	vr::EVRScreenshotError HookScreenshot( VR_ARRAY_COUNT( numTypes ) const vr::EVRScreenshotType *pSupportedTypes, int numTypes ) { return _table.HookScreenshot(pSupportedTypes, numTypes); }
 
 	/** When your application receives a
 	 *  VREvent_RequestScreenshot event, call these functions to get
 	 *  the details of the screenshot request. */
-	virtual vr::EVRScreenshotType GetScreenshotPropertyType( vr::ScreenshotHandle_t screenshotHandle, vr::EVRScreenshotError *pError ) = 0;
+	vr::EVRScreenshotType GetScreenshotPropertyType( vr::ScreenshotHandle_t screenshotHandle, vr::EVRScreenshotError *pError ) { return _table.GetScreenshotPropertyType(screenshotHandle, pError); }
 
 	/** Get the filename for the preview or vr image (see
 	 *  vr::EScreenshotPropertyFilenames).  The return value is
 	 *  the size of the string.   */
- 	virtual uint32_t GetScreenshotPropertyFilename( vr::ScreenshotHandle_t screenshotHandle, vr::EVRScreenshotPropertyFilenames filenameType, VR_OUT_STRING() char *pchFilename, uint32_t cchFilename, vr::EVRScreenshotError *pError ) = 0;
+	uint32_t GetScreenshotPropertyFilename( vr::ScreenshotHandle_t screenshotHandle, vr::EVRScreenshotPropertyFilenames filenameType, VR_OUT_STRING() char *pchFilename, uint32_t cchFilename, vr::EVRScreenshotError *pError ) { return _table.GetScreenshotPropertyFilename(screenshotHandle, filenameType, pchFilename, cchFilename, pError); }
 
 	/** Call this if the application is taking the screen shot
 	 *  will take more than a few ms processing. This will result
 	 *  in an overlay being presented that shows a completion
 	 *  bar. */
-	virtual vr::EVRScreenshotError UpdateScreenshotProgress( vr::ScreenshotHandle_t screenshotHandle, float flProgress ) = 0;
+	vr::EVRScreenshotError UpdateScreenshotProgress( vr::ScreenshotHandle_t screenshotHandle, float flProgress ) { return _table.UpdateScreenshotProgress(screenshotHandle, flProgress); }
 
 	/** Tells the compositor to take an internal screenshot of
 	 *  type VRScreenshotType_Stereo. It will take the current
@@ -4622,7 +5004,7 @@ public:
 	 *  for the VR image.
 	 *  This is similar to request screenshot, but doesn't ever
 	 *  talk to the application, just takes the shot and submits. */
-	virtual vr::EVRScreenshotError TakeStereoScreenshot( vr::ScreenshotHandle_t *pOutScreenshotHandle, const char *pchPreviewFilename, const char *pchVRFilename ) = 0;
+	vr::EVRScreenshotError TakeStereoScreenshot( vr::ScreenshotHandle_t *pOutScreenshotHandle, const char *pchPreviewFilename, const char *pchVRFilename ) { return _table.TakeStereoScreenshot(pOutScreenshotHandle, pchPreviewFilename, pchVRFilename); }
 
 	/** Submit the completed screenshot.  If Steam is running
 	 *  this will call into the Steam client and upload the
@@ -4635,10 +5017,10 @@ public:
 	 *  screenshotHandle can be k_unScreenshotHandleInvalid if this
 	 *  was a new shot taking by the app to be saved and not
 	 *  initiated by a user (achievement earned or something) */
-	virtual vr::EVRScreenshotError SubmitScreenshot( vr::ScreenshotHandle_t screenshotHandle, vr::EVRScreenshotType type, const char *pchSourcePreviewFilename, const char *pchSourceVRFilename ) = 0;
+	vr::EVRScreenshotError SubmitScreenshot( vr::ScreenshotHandle_t screenshotHandle, vr::EVRScreenshotType type, const char *pchSourcePreviewFilename, const char *pchSourceVRFilename ) { return _table.SubmitScreenshot(screenshotHandle, type, pchSourcePreviewFilename, pchSourceVRFilename); }
 };
 
-static const char * const IVRScreenshots_Version = "IVRScreenshots_001";
+static const char * const IVRScreenshots_Version = "FnTable:IVRScreenshots_001";
 
 } // namespace vr
 
@@ -4649,8 +5031,15 @@ static const char * const IVRScreenshots_Version = "IVRScreenshots_001";
 namespace vr
 {
 
+struct VR_IVRResources_FnTable
+{
+	uint32_t (__stdcall *LoadSharedResource)( const char *pchResourceName, char *pchBuffer, uint32_t unBufferLen );
+	uint32_t (__stdcall *GetResourceFullPath)( const char *pchResourceName, const char *pchResourceTypeDirectory,  char *pchPathBuffer, uint32_t unBufferLen );
+};
+
 class IVRResources
 {
+	VR_IVRResources_FnTable _table;
 public:
 
 	// ------------------------------------
@@ -4659,15 +5048,15 @@ public:
 
 	/** Loads the specified resource into the provided buffer if large enough.
 	* Returns the size in bytes of the buffer required to hold the specified resource. */
-	virtual uint32_t LoadSharedResource( const char *pchResourceName, char *pchBuffer, uint32_t unBufferLen ) = 0;
+	uint32_t LoadSharedResource( const char *pchResourceName, char *pchBuffer, uint32_t unBufferLen ) { return _table.LoadSharedResource(pchResourceName, pchBuffer, unBufferLen); }
 
 	/** Provides the full path to the specified resource. Resource names can include named directories for
 	* drivers and other things, and this resolves all of those and returns the actual physical path.
 	* pchResourceTypeDirectory is the subdirectory of resources to look in. */
-	virtual uint32_t GetResourceFullPath( const char *pchResourceName, const char *pchResourceTypeDirectory, VR_OUT_STRING() char *pchPathBuffer, uint32_t unBufferLen ) = 0;
+	uint32_t GetResourceFullPath( const char *pchResourceName, const char *pchResourceTypeDirectory, VR_OUT_STRING() char *pchPathBuffer, uint32_t unBufferLen ) { return _table.GetResourceFullPath(pchResourceName, pchResourceTypeDirectory, pchPathBuffer, unBufferLen); }
 };
 
-static const char * const IVRResources_Version = "IVRResources_001";
+static const char * const IVRResources_Version = "FnTable:IVRResources_001";
 
 
 }
@@ -4677,20 +5066,27 @@ static const char * const IVRResources_Version = "IVRResources_001";
 namespace vr
 {
 
+struct VR_IVRDriverManager_FnTable
+{
+	uint32_t (__stdcall *GetDriverName)( vr::DriverId_t nDriver,  char *pchValue, uint32_t unBufferSize );
+	DriverHandle_t (__stdcall *GetDriverHandle)( const char *pchDriverName );
+};
+
 class IVRDriverManager
 {
+	VR_IVRDriverManager_FnTable _table;
 public:
 	virtual uint32_t GetDriverCount() const = 0;
 
 	/** Returns the length of the number of bytes necessary to hold this string including the trailing null. */
-	virtual uint32_t GetDriverName( vr::DriverId_t nDriver, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize ) = 0;
+	uint32_t GetDriverName( vr::DriverId_t nDriver, VR_OUT_STRING() char *pchValue, uint32_t unBufferSize ) { return _table.GetDriverName(nDriver, pchValue, unBufferSize); }
 
-	virtual DriverHandle_t GetDriverHandle( const char *pchDriverName ) = 0;
+	DriverHandle_t GetDriverHandle( const char *pchDriverName ) { return _table.GetDriverHandle(pchDriverName); }
 
 	virtual bool IsEnabled( vr::DriverId_t nDriver ) const = 0;
 };
 
-static const char * const IVRDriverManager_Version = "IVRDriverManager_001";
+static const char * const IVRDriverManager_Version = "FnTable:IVRDriverManager_001";
 
 } // namespace vr
 
@@ -4903,8 +5299,48 @@ namespace vr
 	};
 
 
+	struct VR_IVRInput_FnTable
+	{
+		EVRInputError (__stdcall *SetActionManifestPath)( const char *pchActionManifestPath );
+		EVRInputError (__stdcall *GetActionSetHandle)( const char *pchActionSetName, VRActionSetHandle_t *pHandle );
+		EVRInputError (__stdcall *GetActionHandle)( const char *pchActionName, VRActionHandle_t *pHandle );
+		EVRInputError (__stdcall *GetInputSourceHandle)( const char *pchInputSourcePath, VRInputValueHandle_t *pHandle );
+		EVRInputError (__stdcall *UpdateActionState)(  VRActiveActionSet_t *pSets, uint32_t unSizeOfVRSelectedActionSet_t, uint32_t unSetCount );
+		EVRInputError (__stdcall *GetDigitalActionData)( VRActionHandle_t action, InputDigitalActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice );
+		EVRInputError (__stdcall *GetAnalogActionData)( VRActionHandle_t action, InputAnalogActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice );
+		EVRInputError (__stdcall *GetPoseActionDataRelativeToNow)( VRActionHandle_t action, ETrackingUniverseOrigin eOrigin, float fPredictedSecondsFromNow, InputPoseActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice );
+		EVRInputError (__stdcall *GetPoseActionDataForNextFrame)( VRActionHandle_t action, ETrackingUniverseOrigin eOrigin, InputPoseActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice );
+		EVRInputError (__stdcall *GetSkeletalActionData)( VRActionHandle_t action, InputSkeletalActionData_t *pActionData, uint32_t unActionDataSize );
+		EVRInputError (__stdcall *GetDominantHand)( ETrackedControllerRole *peDominantHand );
+		EVRInputError (__stdcall *SetDominantHand)( ETrackedControllerRole eDominantHand );
+		EVRInputError (__stdcall *GetBoneCount)( VRActionHandle_t action, uint32_t* pBoneCount );
+		EVRInputError (__stdcall *GetBoneHierarchy)( VRActionHandle_t action,  BoneIndex_t* pParentIndices, uint32_t unIndexArayCount );
+		EVRInputError (__stdcall *GetBoneName)( VRActionHandle_t action, BoneIndex_t nBoneIndex,  char* pchBoneName, uint32_t unNameBufferSize );
+		EVRInputError (__stdcall *GetSkeletalReferenceTransforms)( VRActionHandle_t action, EVRSkeletalTransformSpace eTransformSpace, EVRSkeletalReferencePose eReferencePose,  VRBoneTransform_t *pTransformArray, uint32_t unTransformArrayCount );
+		EVRInputError (__stdcall *GetSkeletalTrackingLevel)( VRActionHandle_t action, EVRSkeletalTrackingLevel* pSkeletalTrackingLevel );
+		EVRInputError (__stdcall *GetSkeletalBoneData)( VRActionHandle_t action, EVRSkeletalTransformSpace eTransformSpace, EVRSkeletalMotionRange eMotionRange,  VRBoneTransform_t *pTransformArray, uint32_t unTransformArrayCount );
+		EVRInputError (__stdcall *GetSkeletalSummaryData)( VRActionHandle_t action, EVRSummaryType eSummaryType, VRSkeletalSummaryData_t * pSkeletalSummaryData );
+		EVRInputError (__stdcall *GetSkeletalBoneDataCompressed)( VRActionHandle_t action, EVRSkeletalMotionRange eMotionRange,  void *pvCompressedData, uint32_t unCompressedSize, uint32_t *punRequiredCompressedSize );
+		EVRInputError (__stdcall *DecompressSkeletalBoneData)( const void *pvCompressedBuffer, uint32_t unCompressedBufferSize, EVRSkeletalTransformSpace eTransformSpace,  VRBoneTransform_t *pTransformArray, uint32_t unTransformArrayCount );
+		EVRInputError (__stdcall *TriggerHapticVibrationAction)( VRActionHandle_t action, float fStartSecondsFromNow, float fDurationSeconds, float fFrequency, float fAmplitude, VRInputValueHandle_t ulRestrictToDevice );
+		EVRInputError (__stdcall *GetActionOrigins)( VRActionSetHandle_t actionSetHandle, VRActionHandle_t digitalActionHandle,  VRInputValueHandle_t *originsOut, uint32_t originOutCount );
+		EVRInputError (__stdcall *GetOriginLocalizedName)( VRInputValueHandle_t origin,  char *pchNameArray, uint32_t unNameArraySize, int32_t unStringSectionsToInclude );
+		EVRInputError (__stdcall *GetOriginTrackedDeviceInfo)( VRInputValueHandle_t origin, InputOriginInfo_t *pOriginInfo, uint32_t unOriginInfoSize );
+		EVRInputError (__stdcall *GetActionBindingInfo)( VRActionHandle_t action, InputBindingInfo_t *pOriginInfo, uint32_t unBindingInfoSize, uint32_t unBindingInfoCount, uint32_t *punReturnedBindingInfoCount );
+		EVRInputError (__stdcall *ShowActionOrigins)( VRActionSetHandle_t actionSetHandle, VRActionHandle_t ulActionHandle );
+		EVRInputError (__stdcall *ShowBindingsForActionSet)(  VRActiveActionSet_t *pSets, uint32_t unSizeOfVRSelectedActionSet_t, uint32_t unSetCount, VRInputValueHandle_t originToHighlight );
+		EVRInputError (__stdcall *GetComponentStateForBinding)( const char *pchRenderModelName, const char *pchComponentName,
+			const InputBindingInfo_t *pOriginInfo, uint32_t unBindingInfoSize, uint32_t unBindingInfoCount,
+			vr::RenderModel_ComponentState_t *pComponentState );
+		bool (__stdcall *IsUsingLegacyInput)();
+		EVRInputError (__stdcall *OpenBindingUI)( const char* pchAppKey, VRActionSetHandle_t ulActionSetHandle, VRInputValueHandle_t ulDeviceHandle, bool bShowOnDesktop );
+		EVRInputError (__stdcall *GetBindingVariant)( vr::VRInputValueHandle_t ulDevicePath,
+			 char *pchVariantArray, uint32_t unVariantArraySize );
+	};
+
 	class IVRInput
 	{
+		VR_IVRInput_FnTable _table;
 	public:
 
 		// ---------------  Handle management   --------------- //
@@ -4913,16 +5349,16 @@ namespace vr
 		* was set on the Steam partner site, calls to this function are ignored. If the Steam partner site
 		* setting and the path provided by this call are different, VRInputError_MismatchedActionManifest is returned.
 		* This call must be made before the first call to UpdateActionState or IVRSystem::PollNextEvent. */
-		virtual EVRInputError SetActionManifestPath( const char *pchActionManifestPath ) = 0;
+		EVRInputError SetActionManifestPath( const char *pchActionManifestPath ) { return _table.SetActionManifestPath(pchActionManifestPath); }
 
 		/** Returns a handle for an action set. This handle is used for all performance-sensitive calls. */
-		virtual EVRInputError GetActionSetHandle( const char *pchActionSetName, VRActionSetHandle_t *pHandle ) = 0;
+		EVRInputError GetActionSetHandle( const char *pchActionSetName, VRActionSetHandle_t *pHandle ) { return _table.GetActionSetHandle(pchActionSetName, pHandle); }
 
 		/** Returns a handle for an action. This handle is used for all performance-sensitive calls. */
-		virtual EVRInputError GetActionHandle( const char *pchActionName, VRActionHandle_t *pHandle ) = 0;
+		EVRInputError GetActionHandle( const char *pchActionName, VRActionHandle_t *pHandle ) { return _table.GetActionHandle(pchActionName, pHandle); }
 
 		/** Returns a handle for any path in the input system. E.g. /user/hand/right */
-		virtual EVRInputError GetInputSourceHandle( const char *pchInputSourcePath, VRInputValueHandle_t *pHandle ) = 0;
+		EVRInputError GetInputSourceHandle( const char *pchInputSourcePath, VRInputValueHandle_t *pHandle ) { return _table.GetInputSourceHandle(pchInputSourcePath, pHandle); }
 
 
 
@@ -4930,118 +5366,118 @@ namespace vr
 
 		/** Reads the current state into all actions. After this call, the results of Get*Action calls
 		* will be the same until the next call to UpdateActionState. */
-		virtual EVRInputError UpdateActionState( VR_ARRAY_COUNT( unSetCount ) VRActiveActionSet_t *pSets, uint32_t unSizeOfVRSelectedActionSet_t, uint32_t unSetCount ) = 0;
+		EVRInputError UpdateActionState( VR_ARRAY_COUNT( unSetCount ) VRActiveActionSet_t *pSets, uint32_t unSizeOfVRSelectedActionSet_t, uint32_t unSetCount ) { return _table.UpdateActionState(pSets, unSizeOfVRSelectedActionSet_t, unSetCount); }
 
 		/** Reads the state of a digital action given its handle. This will return VRInputError_WrongType if the type of
 		* action is something other than digital */
-		virtual EVRInputError GetDigitalActionData( VRActionHandle_t action, InputDigitalActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice ) = 0;
+		EVRInputError GetDigitalActionData( VRActionHandle_t action, InputDigitalActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice ) { return _table.GetDigitalActionData(action, pActionData, unActionDataSize, ulRestrictToDevice); }
 
 		/** Reads the state of an analog action given its handle. This will return VRInputError_WrongType if the type of
 		* action is something other than analog */
-		virtual EVRInputError GetAnalogActionData( VRActionHandle_t action, InputAnalogActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice ) = 0;
+		EVRInputError GetAnalogActionData( VRActionHandle_t action, InputAnalogActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice ) { return _table.GetAnalogActionData(action, pActionData, unActionDataSize, ulRestrictToDevice); }
 
 		/** Reads the state of a pose action given its handle for the number of seconds relative to now. This
 		* will generally be called with negative times from the fUpdateTime fields in other actions. */
-		virtual EVRInputError GetPoseActionDataRelativeToNow( VRActionHandle_t action, ETrackingUniverseOrigin eOrigin, float fPredictedSecondsFromNow, InputPoseActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice ) = 0;
+		EVRInputError GetPoseActionDataRelativeToNow( VRActionHandle_t action, ETrackingUniverseOrigin eOrigin, float fPredictedSecondsFromNow, InputPoseActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice ) { return _table.GetPoseActionDataRelativeToNow(action, eOrigin, fPredictedSecondsFromNow, pActionData, unActionDataSize, ulRestrictToDevice); }
 
 		/** Reads the state of a pose action given its handle. The returned values will match the values returned
 		* by the last call to IVRCompositor::WaitGetPoses(). */
-		virtual EVRInputError GetPoseActionDataForNextFrame( VRActionHandle_t action, ETrackingUniverseOrigin eOrigin, InputPoseActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice ) = 0;
+		EVRInputError GetPoseActionDataForNextFrame( VRActionHandle_t action, ETrackingUniverseOrigin eOrigin, InputPoseActionData_t *pActionData, uint32_t unActionDataSize, VRInputValueHandle_t ulRestrictToDevice ) { return _table.GetPoseActionDataForNextFrame(action, eOrigin, pActionData, unActionDataSize, ulRestrictToDevice); }
 
 		/** Reads the state of a skeletal action given its handle. */
-		virtual EVRInputError GetSkeletalActionData( VRActionHandle_t action, InputSkeletalActionData_t *pActionData, uint32_t unActionDataSize ) = 0;
+		EVRInputError GetSkeletalActionData( VRActionHandle_t action, InputSkeletalActionData_t *pActionData, uint32_t unActionDataSize ) { return _table.GetSkeletalActionData(action, pActionData, unActionDataSize); }
 
 		/** Returns the current dominant hand for the user for this application. This function will only return success for applications
 		* which include "supports_dominant_hand_setting": true in their action manifests. The dominant hand will only change after
 		* a call to UpdateActionState, and the action data returned after that point will use the new dominant hand. */
-		virtual EVRInputError GetDominantHand( ETrackedControllerRole *peDominantHand ) = 0;
+		EVRInputError GetDominantHand( ETrackedControllerRole *peDominantHand ) { return _table.GetDominantHand(peDominantHand); }
 
 		/** Sets the dominant hand for the user for this application. */
-		virtual EVRInputError SetDominantHand( ETrackedControllerRole eDominantHand ) = 0;
+		EVRInputError SetDominantHand( ETrackedControllerRole eDominantHand ) { return _table.SetDominantHand(eDominantHand); }
 
 		// ---------------  Static Skeletal Data ------------------- //
 
 		/** Reads the number of bones in skeleton associated with the given action */
-		virtual EVRInputError GetBoneCount( VRActionHandle_t action, uint32_t* pBoneCount ) = 0;
+		EVRInputError GetBoneCount( VRActionHandle_t action, uint32_t* pBoneCount ) { return _table.GetBoneCount(action, pBoneCount); }
 
 		/** Fills the given array with the index of each bone's parent in the skeleton associated with the given action */
-		virtual EVRInputError GetBoneHierarchy( VRActionHandle_t action, VR_ARRAY_COUNT( unIndexArayCount ) BoneIndex_t* pParentIndices, uint32_t unIndexArayCount ) = 0;
+		EVRInputError GetBoneHierarchy( VRActionHandle_t action, VR_ARRAY_COUNT( unIndexArayCount ) BoneIndex_t* pParentIndices, uint32_t unIndexArayCount ) { return _table.GetBoneHierarchy(action, pParentIndices, unIndexArayCount); }
 
 		/** Fills the given buffer with the name of the bone at the given index in the skeleton associated with the given action */
-		virtual EVRInputError GetBoneName( VRActionHandle_t action, BoneIndex_t nBoneIndex, VR_OUT_STRING() char* pchBoneName, uint32_t unNameBufferSize ) = 0;
+		EVRInputError GetBoneName( VRActionHandle_t action, BoneIndex_t nBoneIndex, VR_OUT_STRING() char* pchBoneName, uint32_t unNameBufferSize ) { return _table.GetBoneName(action, nBoneIndex, pchBoneName, unNameBufferSize); }
 
 		/** Fills the given buffer with the transforms for a specific static skeletal reference pose */
-		virtual EVRInputError GetSkeletalReferenceTransforms( VRActionHandle_t action, EVRSkeletalTransformSpace eTransformSpace, EVRSkeletalReferencePose eReferencePose, VR_ARRAY_COUNT( unTransformArrayCount ) VRBoneTransform_t *pTransformArray, uint32_t unTransformArrayCount ) = 0;
+		EVRInputError GetSkeletalReferenceTransforms( VRActionHandle_t action, EVRSkeletalTransformSpace eTransformSpace, EVRSkeletalReferencePose eReferencePose, VR_ARRAY_COUNT( unTransformArrayCount ) VRBoneTransform_t *pTransformArray, uint32_t unTransformArrayCount ) { return _table.GetSkeletalReferenceTransforms(action, eTransformSpace, eReferencePose, pTransformArray, unTransformArrayCount); }
 
 		/** Reads the level of accuracy to which the controller is able to track the user to recreate a skeletal pose */
-		virtual EVRInputError GetSkeletalTrackingLevel( VRActionHandle_t action, EVRSkeletalTrackingLevel* pSkeletalTrackingLevel ) = 0;
+		EVRInputError GetSkeletalTrackingLevel( VRActionHandle_t action, EVRSkeletalTrackingLevel* pSkeletalTrackingLevel ) { return _table.GetSkeletalTrackingLevel(action, pSkeletalTrackingLevel); }
 
 		// ---------------  Dynamic Skeletal Data ------------------- //
 
 		/** Reads the state of the skeletal bone data associated with this action and copies it into the given buffer. */
-		virtual EVRInputError GetSkeletalBoneData( VRActionHandle_t action, EVRSkeletalTransformSpace eTransformSpace, EVRSkeletalMotionRange eMotionRange, VR_ARRAY_COUNT( unTransformArrayCount ) VRBoneTransform_t *pTransformArray, uint32_t unTransformArrayCount ) = 0;
+		EVRInputError GetSkeletalBoneData( VRActionHandle_t action, EVRSkeletalTransformSpace eTransformSpace, EVRSkeletalMotionRange eMotionRange, VR_ARRAY_COUNT( unTransformArrayCount ) VRBoneTransform_t *pTransformArray, uint32_t unTransformArrayCount ) { return _table.GetSkeletalBoneData(action, eTransformSpace, eMotionRange, pTransformArray, unTransformArrayCount); }
 
 		/** Reads summary information about the current pose of the skeleton associated with the given action.   */
-		virtual EVRInputError GetSkeletalSummaryData( VRActionHandle_t action, EVRSummaryType eSummaryType, VRSkeletalSummaryData_t * pSkeletalSummaryData ) = 0;
+		EVRInputError GetSkeletalSummaryData( VRActionHandle_t action, EVRSummaryType eSummaryType, VRSkeletalSummaryData_t * pSkeletalSummaryData ) { return _table.GetSkeletalSummaryData(action, eSummaryType, pSkeletalSummaryData); }
 
 		/** Reads the state of the skeletal bone data in a compressed form that is suitable for
 		* sending over the network. The required buffer size will never exceed ( sizeof(VR_BoneTransform_t)*boneCount + 2).
 		* Usually the size will be much smaller. */
-		virtual EVRInputError GetSkeletalBoneDataCompressed( VRActionHandle_t action, EVRSkeletalMotionRange eMotionRange, VR_OUT_BUFFER_COUNT( unCompressedSize ) void *pvCompressedData, uint32_t unCompressedSize, uint32_t *punRequiredCompressedSize ) = 0;
+		EVRInputError GetSkeletalBoneDataCompressed( VRActionHandle_t action, EVRSkeletalMotionRange eMotionRange, VR_OUT_BUFFER_COUNT( unCompressedSize ) void *pvCompressedData, uint32_t unCompressedSize, uint32_t *punRequiredCompressedSize ) { return _table.GetSkeletalBoneDataCompressed(action, eMotionRange, pvCompressedData, unCompressedSize, punRequiredCompressedSize); }
 
 		/** Turns a compressed buffer from GetSkeletalBoneDataCompressed and turns it back into a bone transform array. */
-		virtual EVRInputError DecompressSkeletalBoneData( const void *pvCompressedBuffer, uint32_t unCompressedBufferSize, EVRSkeletalTransformSpace eTransformSpace, VR_ARRAY_COUNT( unTransformArrayCount ) VRBoneTransform_t *pTransformArray, uint32_t unTransformArrayCount ) = 0;
+		EVRInputError DecompressSkeletalBoneData( const void *pvCompressedBuffer, uint32_t unCompressedBufferSize, EVRSkeletalTransformSpace eTransformSpace, VR_ARRAY_COUNT( unTransformArrayCount ) VRBoneTransform_t *pTransformArray, uint32_t unTransformArrayCount ) { return _table.DecompressSkeletalBoneData(pvCompressedBuffer, unCompressedBufferSize, eTransformSpace, pTransformArray, unTransformArrayCount); }
 
 		// --------------- Haptics ------------------- //
 
 		/** Triggers a haptic event as described by the specified action */
-		virtual EVRInputError TriggerHapticVibrationAction( VRActionHandle_t action, float fStartSecondsFromNow, float fDurationSeconds, float fFrequency, float fAmplitude, VRInputValueHandle_t ulRestrictToDevice ) = 0;
+		EVRInputError TriggerHapticVibrationAction( VRActionHandle_t action, float fStartSecondsFromNow, float fDurationSeconds, float fFrequency, float fAmplitude, VRInputValueHandle_t ulRestrictToDevice ) { return _table.TriggerHapticVibrationAction(action, fStartSecondsFromNow, fDurationSeconds, fFrequency, fAmplitude, ulRestrictToDevice); }
 
 		// --------------- Action Origins ---------------- //
 
 		/** Retrieve origin handles for an action */
-		virtual EVRInputError GetActionOrigins( VRActionSetHandle_t actionSetHandle, VRActionHandle_t digitalActionHandle, VR_ARRAY_COUNT( originOutCount ) VRInputValueHandle_t *originsOut, uint32_t originOutCount ) = 0;
+		EVRInputError GetActionOrigins( VRActionSetHandle_t actionSetHandle, VRActionHandle_t digitalActionHandle, VR_ARRAY_COUNT( originOutCount ) VRInputValueHandle_t *originsOut, uint32_t originOutCount ) { return _table.GetActionOrigins(actionSetHandle, digitalActionHandle, originsOut, originOutCount); }
 
 		/** Retrieves the name of the origin in the current language. unStringSectionsToInclude is a bitfield of values in EVRInputStringBits that allows the
 			application to specify which parts of the origin's information it wants a string for. */
-		virtual EVRInputError GetOriginLocalizedName( VRInputValueHandle_t origin, VR_OUT_STRING() char *pchNameArray, uint32_t unNameArraySize, int32_t unStringSectionsToInclude ) = 0;
+		EVRInputError GetOriginLocalizedName( VRInputValueHandle_t origin, VR_OUT_STRING() char *pchNameArray, uint32_t unNameArraySize, int32_t unStringSectionsToInclude ) { return _table.GetOriginLocalizedName(origin, pchNameArray, unNameArraySize, unStringSectionsToInclude); }
 
 		/** Retrieves useful information for the origin of this action */
-		virtual EVRInputError GetOriginTrackedDeviceInfo( VRInputValueHandle_t origin, InputOriginInfo_t *pOriginInfo, uint32_t unOriginInfoSize ) = 0;
+		EVRInputError GetOriginTrackedDeviceInfo( VRInputValueHandle_t origin, InputOriginInfo_t *pOriginInfo, uint32_t unOriginInfoSize ) { return _table.GetOriginTrackedDeviceInfo(origin, pOriginInfo, unOriginInfoSize); }
 
 		/** Retrieves useful information about the bindings for an action */
-		virtual EVRInputError GetActionBindingInfo( VRActionHandle_t action, InputBindingInfo_t *pOriginInfo, uint32_t unBindingInfoSize, uint32_t unBindingInfoCount, uint32_t *punReturnedBindingInfoCount ) = 0;
+		EVRInputError GetActionBindingInfo( VRActionHandle_t action, InputBindingInfo_t *pOriginInfo, uint32_t unBindingInfoSize, uint32_t unBindingInfoCount, uint32_t *punReturnedBindingInfoCount ) { return _table.GetActionBindingInfo(action, pOriginInfo, unBindingInfoSize, unBindingInfoCount, punReturnedBindingInfoCount); }
 
 		/** Shows the current binding for the action in-headset */
-		virtual EVRInputError ShowActionOrigins( VRActionSetHandle_t actionSetHandle, VRActionHandle_t ulActionHandle ) = 0;
+		EVRInputError ShowActionOrigins( VRActionSetHandle_t actionSetHandle, VRActionHandle_t ulActionHandle ) { return _table.ShowActionOrigins(actionSetHandle, ulActionHandle); }
 
 		/** Shows the current binding all the actions in the specified action sets */
-		virtual EVRInputError ShowBindingsForActionSet( VR_ARRAY_COUNT( unSetCount ) VRActiveActionSet_t *pSets, uint32_t unSizeOfVRSelectedActionSet_t, uint32_t unSetCount, VRInputValueHandle_t originToHighlight ) = 0;
+		EVRInputError ShowBindingsForActionSet( VR_ARRAY_COUNT( unSetCount ) VRActiveActionSet_t *pSets, uint32_t unSizeOfVRSelectedActionSet_t, uint32_t unSetCount, VRInputValueHandle_t originToHighlight ) { return _table.ShowBindingsForActionSet(pSets, unSizeOfVRSelectedActionSet_t, unSetCount, originToHighlight); }
 
 		/** Use this to query what action on the component returned by GetOriginTrackedDeviceInfo would trigger this binding. */
-		virtual EVRInputError GetComponentStateForBinding( const char *pchRenderModelName, const char *pchComponentName,
+		EVRInputError GetComponentStateForBinding( const char *pchRenderModelName, const char *pchComponentName,
 			const InputBindingInfo_t *pOriginInfo, uint32_t unBindingInfoSize, uint32_t unBindingInfoCount,
-			vr::RenderModel_ComponentState_t *pComponentState ) = 0;
+			vr::RenderModel_ComponentState_t *pComponentState ) { return _table.GetComponentStateForBinding(pchRenderModelName, pchComponentName, pOriginInfo, unBindingInfoSize, unBindingInfoCount, pComponentState); }
 
 
 		// --------------- Legacy Input ------------------- //
-		virtual bool IsUsingLegacyInput() = 0;
+		bool IsUsingLegacyInput() { return _table.IsUsingLegacyInput(); }
 
 
 		// --------------- Utilities ------------------- //
 
 		/** Opens the binding user interface. If no app key is provided it will use the key from the calling process.
 		* If no set is provided it will open to the root of the app binding page. */
-		virtual EVRInputError OpenBindingUI( const char* pchAppKey, VRActionSetHandle_t ulActionSetHandle, VRInputValueHandle_t ulDeviceHandle, bool bShowOnDesktop ) = 0;
+		EVRInputError OpenBindingUI( const char* pchAppKey, VRActionSetHandle_t ulActionSetHandle, VRInputValueHandle_t ulDeviceHandle, bool bShowOnDesktop ) { return _table.OpenBindingUI(pchAppKey, ulActionSetHandle, ulDeviceHandle, bShowOnDesktop); }
 
 		/** Returns the variant set in the current bindings. If the binding doesn't include a variant setting, this function
 		* will return an empty string */
-		virtual EVRInputError GetBindingVariant( vr::VRInputValueHandle_t ulDevicePath,
-			VR_OUT_STRING() char *pchVariantArray, uint32_t unVariantArraySize ) = 0;
+		EVRInputError GetBindingVariant( vr::VRInputValueHandle_t ulDevicePath,
+			VR_OUT_STRING() char *pchVariantArray, uint32_t unVariantArraySize ) { return _table.GetBindingVariant(ulDevicePath, pchVariantArray, unVariantArraySize); }
 
 	};
 
-	static const char * const IVRInput_Version = "IVRInput_010";
+	static const char * const IVRInput_Version = "FnTable:IVRInput_010";
 
 } // namespace vr
 
@@ -5074,26 +5510,37 @@ static const uint64_t k_ulInvalidIOBufferHandle = 0;
 	// ----------------------------------------------------------------------------------------------
 	// Purpose:
 	// ----------------------------------------------------------------------------------------------
+	struct VR_IVRIOBuffer_FnTable
+	{
+		vr::EIOBufferError (__stdcall *Open)( const char *pchPath, vr::EIOBufferMode mode, uint32_t unElementSize, uint32_t unElements, vr::IOBufferHandle_t *pulBuffer );
+		vr::EIOBufferError (__stdcall *Close)( vr::IOBufferHandle_t ulBuffer );
+		vr::EIOBufferError (__stdcall *Read)( vr::IOBufferHandle_t ulBuffer, void *pDst, uint32_t unBytes, uint32_t *punRead );
+		vr::EIOBufferError (__stdcall *Write)( vr::IOBufferHandle_t ulBuffer, void *pSrc, uint32_t unBytes );
+		vr::PropertyContainerHandle_t (__stdcall *PropertyContainer)( vr::IOBufferHandle_t ulBuffer );
+		bool (__stdcall *HasReaders)( vr::IOBufferHandle_t ulBuffer );
+	};
+
 	class IVRIOBuffer
 	{
+		VR_IVRIOBuffer_FnTable _table;
 	public:
 		/** opens an existing or creates a new IOBuffer of unSize bytes */
-		virtual vr::EIOBufferError Open( const char *pchPath, vr::EIOBufferMode mode, uint32_t unElementSize, uint32_t unElements, vr::IOBufferHandle_t *pulBuffer ) = 0;
+		vr::EIOBufferError Open( const char *pchPath, vr::EIOBufferMode mode, uint32_t unElementSize, uint32_t unElements, vr::IOBufferHandle_t *pulBuffer ) { return _table.Open(pchPath, mode, unElementSize, unElements, pulBuffer); }
 
 		/** closes a previously opened or created buffer */
-		virtual vr::EIOBufferError Close( vr::IOBufferHandle_t ulBuffer ) = 0;
+		vr::EIOBufferError Close( vr::IOBufferHandle_t ulBuffer ) { return _table.Close(ulBuffer); }
 
 		/** reads up to unBytes from buffer into *pDst, returning number of bytes read in *punRead */
-		virtual vr::EIOBufferError Read( vr::IOBufferHandle_t ulBuffer, void *pDst, uint32_t unBytes, uint32_t *punRead ) = 0;
+		vr::EIOBufferError Read( vr::IOBufferHandle_t ulBuffer, void *pDst, uint32_t unBytes, uint32_t *punRead ) { return _table.Read(ulBuffer, pDst, unBytes, punRead); }
 
 		/** writes unBytes of data from *pSrc into a buffer. */
-		virtual vr::EIOBufferError Write( vr::IOBufferHandle_t ulBuffer, void *pSrc, uint32_t unBytes ) = 0;
+		vr::EIOBufferError Write( vr::IOBufferHandle_t ulBuffer, void *pSrc, uint32_t unBytes ) { return _table.Write(ulBuffer, pSrc, unBytes); }
 
 		/** retrieves the property container of an buffer. */
-		virtual vr::PropertyContainerHandle_t PropertyContainer( vr::IOBufferHandle_t ulBuffer ) = 0;
+		vr::PropertyContainerHandle_t PropertyContainer( vr::IOBufferHandle_t ulBuffer ) { return _table.PropertyContainer(ulBuffer); }
 
 		/** inexpensively checks for readers to allow writers to fast-fail potentially expensive copies and writes. */
-		virtual bool HasReaders( vr::IOBufferHandle_t ulBuffer ) = 0;
+		bool HasReaders( vr::IOBufferHandle_t ulBuffer ) { return _table.HasReaders(ulBuffer); }
 	};
 
 	static const char *IVRIOBuffer_Version = "IVRIOBuffer_002";
@@ -5110,14 +5557,23 @@ namespace vr
 		HmdMatrix34_t mAnchorToAbsoluteTracking;
 	};
 
+	struct VR_IVRSpatialAnchors_FnTable
+	{
+		EVRSpatialAnchorError (__stdcall *CreateSpatialAnchorFromDescriptor)( const char *pchDescriptor, SpatialAnchorHandle_t *pHandleOut );
+		EVRSpatialAnchorError (__stdcall *CreateSpatialAnchorFromPose)( TrackedDeviceIndex_t unDeviceIndex, ETrackingUniverseOrigin eOrigin, SpatialAnchorPose_t *pPose, SpatialAnchorHandle_t *pHandleOut );
+		EVRSpatialAnchorError (__stdcall *GetSpatialAnchorPose)( SpatialAnchorHandle_t unHandle, ETrackingUniverseOrigin eOrigin, SpatialAnchorPose_t *pPoseOut );
+		EVRSpatialAnchorError (__stdcall *GetSpatialAnchorDescriptor)( SpatialAnchorHandle_t unHandle,  char *pchDescriptorOut, uint32_t *punDescriptorBufferLenInOut );
+	};
+
 	class IVRSpatialAnchors
 	{
+		VR_IVRSpatialAnchors_FnTable _table;
 	public:
 
 		/** Returns a handle for an spatial anchor described by "descriptor".  On success, pHandle
 		* will contain a handle valid for this session.  Caller can wait for an event or occasionally
 		* poll GetSpatialAnchorPose() to find the virtual coordinate associated with this anchor. */
-		virtual EVRSpatialAnchorError CreateSpatialAnchorFromDescriptor( const char *pchDescriptor, SpatialAnchorHandle_t *pHandleOut ) = 0;
+		EVRSpatialAnchorError CreateSpatialAnchorFromDescriptor( const char *pchDescriptor, SpatialAnchorHandle_t *pHandleOut ) { return _table.CreateSpatialAnchorFromDescriptor(pchDescriptor, pHandleOut); }
 
 		/** Returns a handle for an new spatial anchor at pPose.  On success, pHandle
 		* will contain a handle valid for this session.  Caller can wait for an event or occasionally
@@ -5132,11 +5588,11 @@ namespace vr
 		* in the future, and the quality of the anchor (when the descriptor is re-used) will be highest.
 		* The caller may decide to apply offsets from this initial pose, but is advised to stay relatively close to the
 		* original pose location for highest fidelity. */
-		virtual EVRSpatialAnchorError CreateSpatialAnchorFromPose( TrackedDeviceIndex_t unDeviceIndex, ETrackingUniverseOrigin eOrigin, SpatialAnchorPose_t *pPose, SpatialAnchorHandle_t *pHandleOut ) = 0;
+		EVRSpatialAnchorError CreateSpatialAnchorFromPose( TrackedDeviceIndex_t unDeviceIndex, ETrackingUniverseOrigin eOrigin, SpatialAnchorPose_t *pPose, SpatialAnchorHandle_t *pHandleOut ) { return _table.CreateSpatialAnchorFromPose(unDeviceIndex, eOrigin, pPose, pHandleOut); }
 
 		/** Get the pose for a given handle.  This is intended to be cheap enough to call every frame (or fairly often)
 		* so that the driver can refine this position when it has more information available. */
-		virtual EVRSpatialAnchorError GetSpatialAnchorPose( SpatialAnchorHandle_t unHandle, ETrackingUniverseOrigin eOrigin, SpatialAnchorPose_t *pPoseOut ) = 0;
+		EVRSpatialAnchorError GetSpatialAnchorPose( SpatialAnchorHandle_t unHandle, ETrackingUniverseOrigin eOrigin, SpatialAnchorPose_t *pPoseOut ) { return _table.GetSpatialAnchorPose(unHandle, eOrigin, pPoseOut); }
 
 		/** Get the descriptor for a given handle.  This will be empty for handles where the driver has not
 		* yet built a descriptor.  It will be the application-supplied descriptor for previously saved anchors
@@ -5144,11 +5600,11 @@ namespace vr
 		* already in this session, it will be the descriptor provided by the driver.
 		* Returns true if the descriptor fits into the buffer, else false.  Buffer size should be at least
 		* k_unMaxSpatialAnchorDescriptorSize. */
-		virtual EVRSpatialAnchorError GetSpatialAnchorDescriptor( SpatialAnchorHandle_t unHandle, VR_OUT_STRING() char *pchDescriptorOut, uint32_t *punDescriptorBufferLenInOut ) = 0;
+		EVRSpatialAnchorError GetSpatialAnchorDescriptor( SpatialAnchorHandle_t unHandle, VR_OUT_STRING() char *pchDescriptorOut, uint32_t *punDescriptorBufferLenInOut ) { return _table.GetSpatialAnchorDescriptor(unHandle, pchDescriptorOut, punDescriptorBufferLenInOut); }
 
 	};
 
-	static const char * const IVRSpatialAnchors_Version = "IVRSpatialAnchors_001";
+	static const char * const IVRSpatialAnchors_Version = "FnTable:IVRSpatialAnchors_001";
 
 } // namespace vr
 
@@ -5165,34 +5621,43 @@ namespace vr
 	/** Handle for vr profiler events */
 	typedef uint64_t VrProfilerEventHandle_t;
 
+	struct VR_IVRDebug_FnTable
+	{
+		EVRDebugError (__stdcall *EmitVrProfilerEvent)( const char *pchMessage );
+		EVRDebugError (__stdcall *BeginVrProfilerEvent)( VrProfilerEventHandle_t *pHandleOut );
+		EVRDebugError (__stdcall *FinishVrProfilerEvent)( VrProfilerEventHandle_t hHandle, const char *pchMessage );
+		uint32_t (__stdcall *DriverDebugRequest)( vr::TrackedDeviceIndex_t unDeviceIndex, const char *pchRequest,  char *pchResponseBuffer, uint32_t unResponseBufferSize );
+	};
+
 	class IVRDebug
 	{
+		VR_IVRDebug_FnTable _table;
 	public:
 
 		/** Create a vr profiler discrete event (point)
 		* The event will be associated with the message provided in pchMessage, and the current
 		* time will be used as the event timestamp. */
-		virtual EVRDebugError EmitVrProfilerEvent( const char *pchMessage ) = 0;
+		EVRDebugError EmitVrProfilerEvent( const char *pchMessage ) { return _table.EmitVrProfilerEvent(pchMessage); }
 
 		/** Create an vr profiler duration event (line)
 		* The current time will be used as the timestamp for the start of the line.
 		* On success, pHandleOut will contain a handle valid for terminating this event. */
-		virtual EVRDebugError BeginVrProfilerEvent( VrProfilerEventHandle_t *pHandleOut ) = 0;
+		EVRDebugError BeginVrProfilerEvent( VrProfilerEventHandle_t *pHandleOut ) { return _table.BeginVrProfilerEvent(pHandleOut); }
 
 		/** Terminate a vr profiler event
 		* The event associated with hHandle will be considered completed when this method is called.
 		* The current time will be used assocaited to the termination time of the event, and
 		* pchMessage will be used as the event title. */
-		virtual EVRDebugError FinishVrProfilerEvent( VrProfilerEventHandle_t hHandle, const char *pchMessage ) = 0;
+		EVRDebugError FinishVrProfilerEvent( VrProfilerEventHandle_t hHandle, const char *pchMessage ) { return _table.FinishVrProfilerEvent(hHandle, pchMessage); }
 
 		/** Sends a request to the driver for the specified device and returns the response. The maximum response size is 32k,
 		* but this method can be called with a smaller buffer. If the response exceeds the size of the buffer, it is truncated.
 		* The size of the response including its terminating null is returned. */
-		virtual uint32_t DriverDebugRequest( vr::TrackedDeviceIndex_t unDeviceIndex, const char *pchRequest, VR_OUT_STRING() char *pchResponseBuffer, uint32_t unResponseBufferSize ) = 0;
+		uint32_t DriverDebugRequest( vr::TrackedDeviceIndex_t unDeviceIndex, const char *pchRequest, VR_OUT_STRING() char *pchResponseBuffer, uint32_t unResponseBufferSize ) { return _table.DriverDebugRequest(unDeviceIndex, pchRequest, pchResponseBuffer, unResponseBufferSize); }
 
 	};
 
-	static const char * const IVRDebug_Version = "IVRDebug_001";
+	static const char * const IVRDebug_Version = "FnTable:IVRDebug_001";
 
 } // namespace vr
 // End
